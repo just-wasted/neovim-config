@@ -12,6 +12,46 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+require("nvim-treesitter").install({
+	"asciidoc",
+	"bash",
+	"c",
+	"cmake",
+	"comment",
+	"cpp",
+	"css",
+	"diff",
+	"git_config",
+	"git_rebase",
+	"gitcommit",
+	"gitignore",
+	"gitignore",
+	"html",
+	"ini",
+	"javascript",
+	"json",
+	"jsonc",
+	"lua",
+	"luadoc",
+	"make",
+	"markdown",
+	"markdown_inline",
+	"norg",
+	"python",
+	"query",
+	"query",
+	"regex",
+	"rust",
+	"tmux",
+	"toml",
+	"vim",
+	"vimdoc",
+	"xml",
+	"yaml",
+	"zig",
+	"zsh",
+})
+
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
 		"asciidoc",
@@ -134,5 +174,5 @@ vim.api.nvim_create_autocmd("ModeChanged", {
 		pcall(vim.diagnostic.show)
 	end,
 })
---
+
 -- vim: ts=2 sts=2 sw=2 et

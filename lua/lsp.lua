@@ -176,18 +176,18 @@ return {
 						return diagnostic_message[diagnostic.severity]
 					end,
 				},
-				virtual_lines = {
-					current_line = true,
-					format = function(diagnostic)
-						local diagnostic_message = {
-							[vim.diagnostic.severity.ERROR] = diagnostic.message,
-							[vim.diagnostic.severity.WARN] = diagnostic.message,
-							[vim.diagnostic.severity.INFO] = diagnostic.message,
-							[vim.diagnostic.severity.HINT] = diagnostic.message,
-						}
-						return diagnostic_message[diagnostic.severity]
-					end,
-				},
+				-- virtual_lines = {
+				-- 	current_line = true,
+				-- 	format = function(diagnostic)
+				-- 		local diagnostic_message = {
+				-- 			[vim.diagnostic.severity.ERROR] = diagnostic.message,
+				-- 			[vim.diagnostic.severity.WARN] = diagnostic.message,
+				-- 			[vim.diagnostic.severity.INFO] = diagnostic.message,
+				-- 			[vim.diagnostic.severity.HINT] = diagnostic.message,
+				-- 		}
+				-- 		return diagnostic_message[diagnostic.severity]
+				-- 	end,
+				-- },
 				update_in_insert = false,
 			})
 
@@ -288,14 +288,14 @@ return {
 				},
 			})
 		end,
-		-- vim.lsp.config("clangd", {
-		-- 	-- Server-specific settings. See `:help lsp-quickstart`
-		-- 	cmd = {
-		-- 		"clangd",
-		-- 		"--background-index",
-		-- 		-- "--clang-tidy",
-		-- 	},
-		-- }),
+		vim.lsp.config("clangd", {
+			-- Server-specific settings. See `:help lsp-quickstart`
+			cmd = {
+				"clangd",
+				"--background-index",
+				-- "--clang-tidy",
+			},
+		}),
 	},
 }
 -- vim: ts=2 sts=2 sw=2 et

@@ -8,6 +8,8 @@ vim.keymap.set("n", "<leader>n", ":Neotree<CR>", { desc = "[N]eotree" })
 vim.keymap.set("n", "<leader>T", ":tabnew<CR>", { desc = "New [T]ab" })
 vim.keymap.set("n", "<leader>st", ":TodoQuickFix<CR>", { desc = "[T]odo-comments in [Q]ickfix List" })
 vim.keymap.set("n", "<leader>tc", ":TSContext toggle<CR>", { desc = "Function [C]ontext" })
+
+vim.keymap.set("n", "<leader>gB", ":Gitsigns blame<CR>", { desc = "[G]it [B]lame current buffer" })
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -45,3 +47,73 @@ vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>", { desc = "Undotree" })
 vim.keymap.set("n", "gb", ":bNext<CR>", { desc = "[G]o to next [B]uffer" })
 
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show [E]rror Message" })
+
+require("gitsigns").setup({
+	on_attach = function(bufnr)
+		local gitsigns = require("gitsigns")
+
+		local function map(mode, l, r, opts)
+			opts = opts or {}
+			opts.buffer = bufnr
+			vim.keymap.set(mode, l, r, opts)
+		end
+
+		-- Navigation
+		map("n", "]c", function()
+			if vim.wo.diff then
+				vim.cmd.normal({ "]c", bang = true })
+			else
+				gitsigns.nav_hunk("next")
+			end
+		end, { desc = "next [c]hange" })
+
+		map("n", "[c", function()
+			if vim.wo.diff then
+				vim.cmd.normal({ "[c", bang = true })
+			else
+				gitsigns.nav_hunk("prev")
+			end
+		end, { desc = "previous [c]hange" })
+
+		-- Actions
+		map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "[S]tage hunk" })
+		map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "[R]eset hunk" })
+
+		map("v", "<leader>hs", function()
+			gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+		end, { desc = "[S]tage hunk" })
+
+		map("v", "<leader>hr", function()
+			gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+		end, { desc = "[R]eset hunk" })
+
+		map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "[S]tage buffer" })
+		map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "[R]eset buffer" })
+		map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "[P]review hunk" })
+		map("n", "<leader>hi", gitsigns.preview_hunk_inline, { desc = "[P]review hunk [I]nline" })
+
+		map("n", "<leader>hb", function()
+			gitsigns.blame_line({ full = true })
+		end, { desc = "[B]lame line" })
+
+		map("n", "<leader>hd", gitsigns.diffthis, { desc = "git [d]iff" })
+
+		map("n", "<leader>hD", function()
+			gitsigns.diffthis("~")
+		end, { desc = "git [D]iff file" })
+
+		map("n", "<leader>hQ", function()
+			gitsigns.setqflist("all")
+		end, { desc = "send workspace hunks to [Q]flist" })
+		map("n", "<leader>hq", gitsigns.setqflist, { desc = "send buffer hunks to [q]flist" })
+
+		-- Toggles
+		map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "[t]oggle line [b]lame" })
+		map("n", "<leader>tw", gitsigns.toggle_word_diff, { desc = "[t]oggle [w]ord diff" })
+
+		-- Text object
+		map({ "o", "x" }, "ih", gitsigns.select_hunk, { desc = "inner hunk" })
+	end,
+})
+
+-- vim: ts=2 sts=2 sw=2 et
