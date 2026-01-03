@@ -43,53 +43,49 @@ return {
 			end
 
 			-- Install core parsers after lazy.nvim finishes loading all plugins
-			-- vim.api.nvim_create_autocmd("User", {
-			-- 	pattern = "LazyDone",
-			-- 	once = true,
-			-- 	callback = function()
-			-- 		ts.install({
-			-- 			"asciidoc",
-			-- 			"bash",
-			-- 			"c",
-			-- 			"cmake",
-			-- 			"comment",
-			-- 			"cpp",
-			-- 			"css",
-			-- 			"diff",
-			-- 			"git_config",
-			-- 			"git_rebase",
-			-- 			"gitcommit",
-			-- 			"gitignore",
-			-- 			"gitignore",
-			-- 			"html",
-			-- 			"ini",
-			-- 			"javascript",
-			-- 			"json",
-			-- 			"jsonc",
-			-- 			"lua",
-			-- 			"luadoc",
-			-- 			"make",
-			-- 			"markdown",
-			-- 			"markdown_inline",
-			-- 			"norg",
-			-- 			"python",
-			-- 			"query",
-			-- 			"query",
-			-- 			"regex",
-			-- 			"rust",
-			-- 			"tmux",
-			-- 			"toml",
-			-- 			"vim",
-			-- 			"vimdoc",
-			-- 			"xml",
-			-- 			"yaml",
-			-- 			"zig",
-			-- 			"zsh",
-			-- 		}, {
-			-- 			max_jobs = 8,
-			-- 		})
-			-- 	end,
-			-- })
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "LazyDone",
+				once = true,
+				callback = function()
+					ts.install({
+						"bash",
+						"c",
+						"cmake",
+						"comment",
+						"cpp",
+						"css",
+						"diff",
+						"git_config",
+						"git_rebase",
+						"gitcommit",
+						"gitignore",
+						"gitignore",
+						"html",
+						"ini",
+						"javascript",
+						"json",
+						"lua",
+						"luadoc",
+						"make",
+						"markdown",
+						"markdown_inline",
+						"python",
+						"query",
+						"regex",
+						"rust",
+						"tmux",
+						"toml",
+						"vim",
+						"vimdoc",
+						"xml",
+						"yaml",
+						"zig",
+						"zsh",
+					}, {
+						max_jobs = 8,
+					})
+				end,
+			})
 
 			local group = vim.api.nvim_create_augroup("TreesitterSetup", { clear = true })
 
@@ -97,6 +93,12 @@ return {
 				"checkhealth",
 				"lazy",
 				"mason",
+				"fidget",
+				"TelescopeResults",
+				"TelescopePrompt",
+				"blink-cmp-menu",
+				"neo-tree",
+				"gitsigns-blame",
 			}
 
 			-- Auto-install parsers and enable highlighting on FileType
@@ -131,150 +133,144 @@ return {
 				end,
 			})
 		end,
+	},
 
-		{
-			"nvim-treesitter/nvim-treesitter-textobjects",
-			event = "VeryLazy",
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		event = "VeryLazy",
 
-			branch = "main",
+		branch = "main",
 
-			keys = {
-				{
-					"[f",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_previous_start(
-							"@function.outer",
-							"textobjects"
-						)
-					end,
-					desc = "prev function",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"]f",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
-					end,
-					desc = "next function",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"[F",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_previous_end("@function.outer", "textobjects")
-					end,
-					desc = "prev function end",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"]F",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_next_end("@function.outer", "textobjects")
-					end,
-					desc = "next function end",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"[a",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_previous_start(
-							"@parameter.outer",
-							"textobjects"
-						)
-					end,
-					desc = "prev argument",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"]a",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_next_start("@parameter.outer", "textobjects")
-					end,
-					desc = "next argument",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"[A",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_previous_end("@parameter.outer", "textobjects")
-					end,
-					desc = "prev argument end",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"]A",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_next_end("@parameter.outer", "textobjects")
-					end,
-					desc = "next argument end",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"[s",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_previous_start("@block.outer", "textobjects")
-					end,
-					desc = "prev block",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"]s",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_next_start("@block.outer", "textobjects")
-					end,
-					desc = "next block",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"[S",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_previous_end("@block.outer", "textobjects")
-					end,
-					desc = "prev block",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"]S",
-					function()
-						require("nvim-treesitter-textobjects.move").goto_next_end("@block.outer", "textobjects")
-					end,
-					desc = "next block",
-					mode = { "n", "x", "o" },
-				},
-				{
-					"gap",
-					function()
-						require("nvim-treesitter-textobjects.swap").swap_previous("@parameter.inner")
-					end,
-					desc = "swap prev argument",
-				},
-				{
-					"gan",
-					function()
-						require("nvim-treesitter-textobjects.swap").swap_next("@parameter.inner")
-					end,
-					desc = "swap next argument",
-				},
+		keys = {
+			{
+				"[f",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
+				end,
+				desc = "prev function",
+				mode = { "n", "x", "o" },
 			},
-
-			opts = {
-				move = {
-					enable = true,
-					set_jumps = true,
-				},
-				swap = {
-					enable = true,
-				},
+			{
+				"]f",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
+				end,
+				desc = "next function",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"[F",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_previous_end("@function.outer", "textobjects")
+				end,
+				desc = "prev function end",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"]F",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_next_end("@function.outer", "textobjects")
+				end,
+				desc = "next function end",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"[a",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_previous_start("@parameter.outer", "textobjects")
+				end,
+				desc = "prev argument",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"]a",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_next_start("@parameter.outer", "textobjects")
+				end,
+				desc = "next argument",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"[A",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_previous_end("@parameter.outer", "textobjects")
+				end,
+				desc = "prev argument end",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"]A",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_next_end("@parameter.outer", "textobjects")
+				end,
+				desc = "next argument end",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"[s",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_previous_start("@block.outer", "textobjects")
+				end,
+				desc = "prev block",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"]s",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_next_start("@block.outer", "textobjects")
+				end,
+				desc = "next block",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"[S",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_previous_end("@block.outer", "textobjects")
+				end,
+				desc = "prev block",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"]S",
+				function()
+					require("nvim-treesitter-textobjects.move").goto_next_end("@block.outer", "textobjects")
+				end,
+				desc = "next block",
+				mode = { "n", "x", "o" },
+			},
+			{
+				"gap",
+				function()
+					require("nvim-treesitter-textobjects.swap").swap_previous("@parameter.inner")
+				end,
+				desc = "swap prev argument",
+			},
+			{
+				"gan",
+				function()
+					require("nvim-treesitter-textobjects.swap").swap_next("@parameter.inner")
+				end,
+				desc = "swap next argument",
 			},
 		},
 
-		{
-			"nvim-treesitter/nvim-treesitter-context",
-			opts = {
-				enable = false,
-				max_lines = 4,
-				multiline_threshold = 2,
+		opts = {
+			move = {
+				enable = true,
+				set_jumps = true,
 			},
+			swap = {
+				enable = true,
+			},
+		},
+	},
+
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		opts = {
+			enable = false,
+			max_lines = 4,
+			multiline_threshold = 2,
 		},
 	},
 }
