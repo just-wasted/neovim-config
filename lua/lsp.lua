@@ -292,8 +292,10 @@ return {
 			-- Server-specific settings. See `:help lsp-quickstart`
 			cmd = {
 				"clangd",
+				"--compile-commands-dir=build",
+				"--query-driver=/**/*gcc,/**/*g++",
 				"--background-index",
-				-- "--clang-tidy",
+				"--clang-tidy",
 			},
 		}),
 	},

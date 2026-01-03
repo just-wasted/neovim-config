@@ -99,6 +99,8 @@ return {
 				"blink-cmp-menu",
 				"neo-tree",
 				"gitsigns-blame",
+				"undotree",
+				"qf",
 			}
 
 			-- Auto-install parsers and enable highlighting on FileType

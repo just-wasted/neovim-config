@@ -4,7 +4,7 @@ vim.keymap.del("n", "gO")
 
 vim.keymap.set("n", "<leader>o", "o<Esc>", { desc = "Empty line below" })
 vim.keymap.set("n", "<leader>O", "O<Esc>", { desc = "Empty line above" })
-vim.keymap.set("n", "<leader>n", ":Neotree<CR>", { desc = "[N]eotree" })
+vim.keymap.set("n", "<leader>n", ":Neotree toggle<CR>", { desc = "[N]eotree" })
 vim.keymap.set("n", "<leader>T", ":tabnew<CR>", { desc = "New [T]ab" })
 vim.keymap.set("n", "<leader>st", ":TodoQuickFix<CR>", { desc = "[T]odo-comments in [Q]ickfix List" })
 vim.keymap.set("n", "<leader>tc", ":TSContext toggle<CR>", { desc = "Function [C]ontext" })
