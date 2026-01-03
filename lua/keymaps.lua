@@ -9,7 +9,6 @@ vim.keymap.set("n", "<leader>T", ":tabnew<CR>", { desc = "New [T]ab" })
 vim.keymap.set("n", "<leader>st", ":TodoQuickFix<CR>", { desc = "[T]odo-comments in [Q]ickfix List" })
 vim.keymap.set("n", "<leader>tc", ":TSContext toggle<CR>", { desc = "Function [C]ontext" })
 
-vim.keymap.set("n", "<leader>gB", ":Gitsigns blame<CR>", { desc = "[G]it [B]lame current buffer" })
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -94,7 +93,11 @@ require("gitsigns").setup({
 
 		map("n", "<leader>hb", function()
 			gitsigns.blame_line({ full = true })
-		end, { desc = "[B]lame line" })
+		end, { desc = "[b]lame line" })
+
+		map("n", "<leader>hB", function()
+			gitsigns.blame({ full = true })
+		end, { desc = "blame [B]uffer" })
 
 		map("n", "<leader>hd", gitsigns.diffthis, { desc = "git [d]iff" })
 
