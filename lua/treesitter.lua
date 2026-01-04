@@ -97,8 +97,10 @@ return {
 				"TelescopeResults",
 				"TelescopePrompt",
 				"blink-cmp-menu",
+				"lazy_backdrop",
 				"neo-tree",
 				"gitsigns-blame",
+				"minimap",
 				"undotree",
 				"qf",
 			}

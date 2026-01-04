@@ -90,4 +90,10 @@ vim.api.nvim_create_autocmd("ModeChanged", {
 	end,
 })
 
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		require("mini.map").open()
+	end,
+})
+
 -- vim: ts=2 sts=2 sw=2 et

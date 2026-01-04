@@ -185,7 +185,9 @@ require("lazy").setup({
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>w", group = "[W]orkspace" },
 				{ "<leader>t", group = "[T]oggle" },
-				{ "<leader>g", group = "[G]it", mode = { "n", "v" } },
+				{ "<leader>g", group = "[G]it Pickers", mode = { "n", "v" } },
+				{ "<leader>h", group = "Git [H]unks" },
+				{ "<leader>m", group = "[M]ap" },
 				{ "<leader>q", group = "[Q]uickfix" },
 			},
 		},
@@ -369,6 +371,56 @@ require("lazy").setup({
 			-- require("mini.indentscope").setup({ symbol = "╎" })
 
 			require("mini.starter").setup()
+
+			local map = require("mini.map")
+			map.setup({
+				-- Highlight integrations (none by default)
+				integrations = {
+					map.gen_integration.builtin_search(),
+					map.gen_integration.gitsigns(),
+					map.gen_integration.diagnostic(),
+				},
+				-- Symbols used to display data
+				symbols = {
+					-- Encode symbols. See `:h MiniMap.config` for specification and
+					-- `:h MiniMap.gen_encode_symbols` for pre-built ones.
+					-- Default: solid blocks with 3x2 resolution.
+					-- encode = nil,
+					encode = map.gen_encode_symbols.dot("4x2"),
+					-- Scrollbar parts for view and line. Use empty string to disable any.
+					scroll_line = "█",
+					scroll_view = "┃",
+				},
+
+				-- Window options
+				window = {
+					-- Whether window is focusable in normal way (with `wincmd` or mouse)
+					focusable = true,
+
+					-- Side to stick ('left' or 'right')
+					side = "right",
+
+					-- Whether to show count of multiple integration highlights
+					show_integration_count = true,
+
+					-- Total width
+					width = 6,
+
+					-- Value of 'winblend' option
+					winblend = 25,
+
+					-- Z-index
+					zindex = 10,
+				},
+			})
+			vim.keymap.set("n", "<leader>mc", map.close, { desc = "Map Close" })
+			vim.keymap.set("n", "<leader>mf", map.toggle_focus, { desc = "Map Focus" })
+			vim.keymap.set("n", "<leader>mm", map.toggle, { desc = "Map Toggle" })
+			vim.keymap.set("n", "<leader>mr", map.refresh, { desc = "Map Refresh" })
+
+			vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = "#2f334d", bg = "NONE" })
+			vim.api.nvim_set_hl(0, "MiniMapSymbolLine", { fg = "#2f334d", bg = "NONE" })
+			vim.api.nvim_set_hl(0, "MiniMapSymbolView", { fg = "#2f334d", bg = "NONE" })
 
 			-- Simple and easy statusline.
 			--  You could remove this setup call if you don't like it,
