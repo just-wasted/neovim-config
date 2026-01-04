@@ -294,7 +294,7 @@ require("lazy").setup({
 
 			-- (Default) Only show the documentation popup when manually triggered
 			completion = {
-				documentation = { auto_show = false },
+				documentation = { auto_show = true },
 				menu = { border = "none" },
 			},
 
@@ -377,8 +377,8 @@ require("lazy").setup({
 				-- Highlight integrations (none by default)
 				integrations = {
 					map.gen_integration.builtin_search(),
-					map.gen_integration.gitsigns(),
 					map.gen_integration.diagnostic(),
+					map.gen_integration.gitsigns(),
 				},
 				-- Symbols used to display data
 				symbols = {
@@ -413,10 +413,10 @@ require("lazy").setup({
 					zindex = 10,
 				},
 			})
-			vim.keymap.set("n", "<leader>mc", map.close, { desc = "Map Close" })
-			vim.keymap.set("n", "<leader>mf", map.toggle_focus, { desc = "Map Focus" })
-			vim.keymap.set("n", "<leader>mm", map.toggle, { desc = "Map Toggle" })
-			vim.keymap.set("n", "<leader>mr", map.refresh, { desc = "Map Refresh" })
+			vim.keymap.set("n", "<leader>mc", map.close, { desc = "[M]ap [C]lose" })
+			vim.keymap.set("n", "<leader>mf", map.toggle_focus, { desc = "[M]ap [F]ocus" })
+			vim.keymap.set("n", "<leader>mm", map.toggle, { desc = "[M]ap Toggle" })
+			vim.keymap.set("n", "<leader>mr", map.refresh, { desc = "[M]ap [R]efresh" })
 
 			vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = "#2f334d", bg = "NONE" })
 			vim.api.nvim_set_hl(0, "MiniMapSymbolLine", { fg = "#2f334d", bg = "NONE" })

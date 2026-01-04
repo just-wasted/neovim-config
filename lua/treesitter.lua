@@ -103,6 +103,7 @@ return {
 				"minimap",
 				"undotree",
 				"qf",
+				"blink-cmp-documentation",
 			}
 
 			-- Auto-install parsers and enable highlighting on FileType

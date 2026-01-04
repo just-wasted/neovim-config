@@ -2,6 +2,16 @@
 --  See `:help vim.keymap.set()`
 vim.keymap.del("n", "gO")
 
+vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste over selection, preserve register" })
+
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
+
+vim.keymap.set("v", "gj", ":join<CR>", { desc = "Join selected lines" })
+
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
 vim.keymap.set("n", "<leader>o", "o<Esc>", { desc = "Empty line below" })
 vim.keymap.set("n", "<leader>O", "O<Esc>", { desc = "Empty line above" })
 vim.keymap.set("n", "<leader>n", ":Neotree toggle<CR>", { desc = "[N]eotree" })
@@ -9,8 +19,8 @@ vim.keymap.set("n", "<leader>T", ":tabnew<CR>", { desc = "New [T]ab" })
 vim.keymap.set("n", "<leader>st", ":TodoQuickFix<CR>", { desc = "[T]odo-comments in [Q]ickfix List" })
 vim.keymap.set("n", "<leader>tc", ":TSContext toggle<CR>", { desc = "Function [C]ontext" })
 
--- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
+-- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
