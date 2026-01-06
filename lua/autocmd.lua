@@ -96,4 +96,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "qf",
+	callback = function()
+		vim.cmd("resize 5")
+	end,
+})
 -- vim: ts=2 sts=2 sw=2 et

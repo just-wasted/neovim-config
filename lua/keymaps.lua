@@ -1,7 +1,15 @@
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 vim.keymap.del("n", "gO")
+vim.keymap.del("n", "<c-w>d")
+vim.keymap.del("n", "<c-w><c-d>")
 
+for _, key in ipairs({ "n", "N", "*", "#" }) do
+	local rhs = key .. "<Cmd>lua MiniMap.refresh({}, {lines = false, scrollbar = false})<CR>"
+	vim.keymap.set("n", key, rhs)
+end
+
+vim.keymap.set("n", "gh", ": LspClangdSwitchSourceHeader<CR>", { desc = "Goto [H]eader/ Source" })
 vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste over selection, preserve register" })
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
@@ -21,7 +29,7 @@ vim.keymap.set("n", "<leader>tc", ":TSContext toggle<CR>", { desc = "Function [C
 
 --  See `:help hlsearch`
 -- Clear highlights on search when pressing <Esc> in normal mode
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>:<CR>")
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>qq", vim.diagnostic.setqflist, { desc = "Open diagnostic [Q]uickfix list" })

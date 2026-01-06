@@ -98,6 +98,7 @@ return {
 			vim.keymap.set("n", "<leader>gb", builtin.git_bcommits, { desc = "Search [G]it Commits for [B]uffer" })
 			vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Search [G]it [S]tatus" })
 			vim.keymap.set("n", "<leader>gB", builtin.git_branches, { desc = "[G]it [B]ranches" })
+			vim.keymap.set("n", "<leader>sR", builtin.lsp_references, { desc = "Search [L]SP [R]eferences" })
 
 			-- Slightly advanced example of overriding default behavior and theme
 			vim.keymap.set("n", "<leader>/", function()

@@ -90,20 +90,22 @@ return {
 			local group = vim.api.nvim_create_augroup("TreesitterSetup", { clear = true })
 
 			local ignore_filetypes = {
-				"checkhealth",
-				"lazy",
-				"mason",
-				"fidget",
-				"TelescopeResults",
 				"TelescopePrompt",
-				"blink-cmp-menu",
-				"lazy_backdrop",
-				"neo-tree",
-				"gitsigns-blame",
-				"minimap",
-				"undotree",
-				"qf",
+				"TelescopeResults",
 				"blink-cmp-documentation",
+				"blink-cmp-menu",
+				"checkhealth",
+				"fidget",
+				"git",
+				"gitsigns-blame",
+				"lazy",
+				"lazy_backdrop",
+				"mason",
+				"minimap",
+				"neo-tree",
+				"qf",
+				"undotree",
+				"man",
 			}
 
 			-- Auto-install parsers and enable highlighting on FileType

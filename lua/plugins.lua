@@ -52,6 +52,18 @@ require("lazy").setup({
 	{
 		"sindrets/diffview.nvim",
 		cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles" },
+		opts = {
+			hooks = {
+				diff_buf_read = function(bufnr)
+					-- Change local options in diff buffers
+					vim.opt_local.wrap = false
+					vim.opt_local.list = false
+				end,
+				view_opened = function(view)
+					print(("A new %s was opened on tab page %d!"):format(view.class:name(), view.tabpage))
+				end,
+			},
+		},
 	},
 	{
 		"mbbill/undotree",
@@ -256,7 +268,12 @@ require("lazy").setup({
 			},
 		},
 	},
-
+	{
+		"numToStr/Comment.nvim",
+		opts = {
+			-- add any options here
+		},
+	},
 	{
 		"saghen/blink.cmp",
 		-- optional: provides snippets for the snippet source
@@ -284,7 +301,7 @@ require("lazy").setup({
 			-- C-k: Toggle signature help (if signature.enabled = true)
 			--
 			-- See :h blink-cmp-config-keymap for defining your own keymap
-			keymap = { preset = "enter" },
+			keymap = { preset = "super-tab" },
 
 			appearance = {
 				-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -298,6 +315,10 @@ require("lazy").setup({
 				menu = { border = "none" },
 			},
 
+			cmdline = {
+				keymap = { preset = "inherit" },
+				completion = { menu = { auto_show = true } },
+			},
 			-- Default list of enabled providers defined so that you can extend it
 			-- elsewhere in your config, without redefining it, due to `opts_extend`
 			sources = {
@@ -388,8 +409,10 @@ require("lazy").setup({
 					-- encode = nil,
 					encode = map.gen_encode_symbols.dot("4x2"),
 					-- Scrollbar parts for view and line. Use empty string to disable any.
-					scroll_line = "█",
-					scroll_view = "┃",
+					scroll_line = "┃",
+					scroll_view = "│",
+					-- scroll_line = "█",
+					-- scroll_view = "┃",
 				},
 
 				-- Window options
@@ -422,6 +445,19 @@ require("lazy").setup({
 			vim.api.nvim_set_hl(0, "MiniMapSymbolLine", { fg = "#2f334d", bg = "NONE" })
 			vim.api.nvim_set_hl(0, "MiniMapSymbolView", { fg = "#2f334d", bg = "NONE" })
 
+			require("mini.comment").setup({
+				options = {
+					-- benutze 'commentstring' aus ftplugin
+					custom_commentstring = nil,
+				},
+				mappings = {
+					-- Standard: gcc / gc
+					comment = "gc",
+					comment_line = "gcc",
+					comment_visual = "gc",
+					comment_textobject = "gc",
+				},
+			})
 			-- Simple and easy statusline.
 			--  You could remove this setup call if you don't like it,
 			--  and try some other statusline plugin
