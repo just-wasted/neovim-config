@@ -116,6 +116,9 @@ require("lazy").setup({
 		---@module 'neo-tree'
 		---@type neotree.Config
 		opts = {
+			window = {
+				width = 27,
+			},
 			-- options go here
 		},
 	},
@@ -316,7 +319,7 @@ require("lazy").setup({
 			},
 
 			cmdline = {
-				keymap = { preset = "inherit" },
+				keymap = { preset = "super-tab" },
 				completion = { menu = { auto_show = true } },
 			},
 			-- Default list of enabled providers defined so that you can extend it

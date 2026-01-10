@@ -61,7 +61,7 @@ vim.keymap.set("n", "k", function()
 end, { expr = true })
 
 vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>", { desc = "Undotree" })
-vim.keymap.set("n", "gb", ":bNext<CR>", { desc = "[G]o to next [B]uffer" })
+vim.keymap.set("n", "g<TAB>", ":bNext<CR>", { desc = "[G]o to next Buffer" })
 
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show [E]rror Message" })
 
