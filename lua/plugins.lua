@@ -69,6 +69,13 @@ require("lazy").setup({
 		"mbbill/undotree",
 	},
 	{
+		"GustavEikaas/easy-dotnet.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+		config = function()
+			require("easy-dotnet").setup()
+		end,
+	},
+	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		config = true,
@@ -366,7 +373,7 @@ require("lazy").setup({
 		event = "VimEnter",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {
-			signs = true,
+			signs = false,
 			highlight = {
 				keyword = "fg",
 				after = "",

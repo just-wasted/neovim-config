@@ -27,8 +27,10 @@ return {
 					return
 				end
 
+				local noIndent = { "cs", "c_sharp" }
+
 				local ok = pcall(vim.treesitter.start, buf, lang)
-				if ok and vim.api.nvim_buf_is_valid(buf) then
+				if ok and vim.api.nvim_buf_is_valid(buf) and not vim.tbl_contains(noIndent, lang) then
 					vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 					pending_buffers[pending_key] = nil -- Success - clear tracking
 				elseif attempts > 0 then
@@ -106,6 +108,7 @@ return {
 				"qf",
 				"undotree",
 				"man",
+				"monitorgraph",
 			}
 
 			-- Auto-install parsers and enable highlighting on FileType
