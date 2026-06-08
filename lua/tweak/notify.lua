@@ -187,5 +187,4 @@ require('mini.notify').setup({
 local map = function(lhs, rhs, desc) vim.keymap.set('n', lhs, rhs, { desc = desc, silent = true }) end
 map('<leader>nh', function() MiniNotify.show_history() end, 'Notify history')
 
--- dont delete:
 -- vim: ts=2 sts=2 sw=2 et
