@@ -2,6 +2,8 @@ local state = {
   lsp_progress = {},
   win_id = nil,
   buf_id = nil,
+  spinner_chars = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧" },
+  spinner_timer = nil,
 }
 
 -- Persistent namespace for highlights
@@ -10,26 +12,31 @@ local ns = vim.api.nvim_create_namespace('NotifyHighlight')
 local function update_window()
   local lines = {}
 
-  -- Group LSP messages with their status lines
+  -- Collect LSP messages and status lines
   local message_line_indices = {}
   local status_line_indices = {}
   for _, progress in pairs(state.lsp_progress) do
     if progress then
       -- Message (if exists)
-      local msg = progress.title or ""
-      if progress.message and progress.message ~= "" then
-        msg = msg .. (msg ~= "" and " " or "") .. progress.message
+      local msg = progress.title or ''
+      if progress.message and progress.message ~= '' then
+        msg = msg .. (msg ~= '' and ' ' or '') .. progress.message
       end
-      if msg ~= "" then
-        msg = msg:gsub("%b()", ""):gsub("^%s+", ""):gsub("%s+$", "")
+      if msg ~= '' then
+        msg = msg:gsub('%b()', ''):gsub('^%s+', ''):gsub('%s+$', '')
         table.insert(lines, msg)
-        table.insert(message_line_indices, #lines - 1)  -- Store 0-indexed buffer line
+        table.insert(message_line_indices, #lines - 1)
       end
 
-      -- Status line (PERCENT Client) - always add after message
-      local percent_str = progress.percentage and string.format("%d%%", progress.percentage) or ""
-      table.insert(lines, string.format("%-4s %s", percent_str, progress.client))
-      table.insert(status_line_indices, #lines - 1)  -- Store 0-indexed buffer line
+      -- Status line: SPINNER Client percentage
+      local percent_str = ''
+      -- local percent_str = progress.percentage and string.format('%d%%', progress.percentage) or ''
+      local spinner = state.spinner_chars[(progress.spinner_index or 0) % #state.spinner_chars + 1]
+      local status_parts = { spinner }
+      if percent_str ~= '' then table.insert(status_parts, percent_str) end
+      table.insert(status_parts, progress.client)
+      table.insert(lines, table.concat(status_parts, ' '))
+      table.insert(status_line_indices, #lines - 1)
     end
   end
 
@@ -50,7 +57,7 @@ local function update_window()
 
   -- Right-justify all lines
   for i, line in ipairs(lines) do
-    lines[i] = string.format("%" .. max_width .. "s", line)
+    lines[i] = string.format('%' .. max_width .. 's', line)
   end
 
   local has_statusline = vim.o.laststatus > 0
@@ -67,15 +74,13 @@ local function update_window()
 
   if not state.buf_id or not vim.api.nvim_buf_is_valid(state.buf_id) then
     state.buf_id = vim.api.nvim_create_buf(false, true)
-    vim.bo[state.buf_id].filetype = 'mininotify'
   end
 
   vim.api.nvim_buf_set_lines(state.buf_id, 0, -1, true, lines)
 
-  -- Highlighting: only message lines as Comment
+  -- Apply highlighting: messages as Comment, status lines as WarningMsg
   vim.api.nvim_buf_clear_namespace(state.buf_id, ns, 0, -1)
 
-  -- Message lines as Comment (buf_line is already 0-indexed)
   for _, buf_line in ipairs(message_line_indices) do
     vim.api.nvim_buf_set_extmark(state.buf_id, ns, buf_line, 0, {
       end_row = buf_line + 1,
@@ -84,26 +89,24 @@ local function update_window()
     })
   end
 
-  -- Status lines as Comment (buf_line is already 0-indexed)
   for _, buf_line in ipairs(status_line_indices) do
     vim.api.nvim_buf_set_extmark(state.buf_id, ns, buf_line, 0, {
       end_row = buf_line + 1,
-      hl_group = 'warningmsg',
+      hl_group = 'WarningMsg',
       hl_eol = true,
     })
   end
 
-
   -- Create window config: reuse existing window if valid, otherwise create new one
   local win_config = {
-    relative = "editor",
-    anchor = "SE",
+    relative = 'editor',
+    anchor = 'SE',
     width = max_width,
     height = height,
     row = vim.o.lines - vertical_pad - 1,
     col = vim.o.columns - vertical_pad,
-    border = "",
-    style = "minimal",
+    border = '',
+    style = 'minimal',
   }
 
   if not state.win_id or not vim.api.nvim_win_is_valid(state.win_id) then
@@ -112,28 +115,51 @@ local function update_window()
     vim.api.nvim_win_set_config(state.win_id, win_config)
   end
 
+  -- Match editor background
+  vim.api.nvim_set_option_value('winhl', 'Normal:Normal', { win = state.win_id })
+
+  -- Start spinner animation timer (only once)
+  if not state.spinner_timer then
+    state.spinner_timer = vim.loop.new_timer()
+    state.spinner_timer:start(100, 100, vim.schedule_wrap(function()
+      for _, progress in pairs(state.lsp_progress) do
+        if progress then
+          progress.spinner_index = (progress.spinner_index + 1) % #state.spinner_chars
+        end
+      end
+      update_window()
+    end))
+  end
+
 end
 
 -- Handle LSP progress notifications ($/progress)
 vim.lsp.handlers['$/progress'] = function(err, result, ctx)
-  if err or not result or not result.value then return end
+  if err or not result or not result.value then
+    return
+  end
   local client = vim.lsp.get_client_by_id(ctx.client_id)
-  if not client then return end
+  if not client then
+    return
+  end
 
   local progress_value = result.value
-  local progress_id = client.name .. (result.token or "")
+  local progress_id = client.name .. (result.token or '')
 
   if progress_value.kind == 'begin' then
     state.lsp_progress[progress_id] = {
       client = client.name,
-      title = progress_value.title or "",
-      message = "",
+      title = progress_value.title or '',
+      message = '',
       percentage = 0,
+      spinner_index = 0,
     }
   elseif progress_value.kind == 'report' then
     if state.lsp_progress[progress_id] then
-      state.lsp_progress[progress_id].message = progress_value.message or state.lsp_progress[progress_id].message
-      state.lsp_progress[progress_id].percentage = progress_value.percentage or state.lsp_progress[progress_id].percentage
+      state.lsp_progress[progress_id].message = progress_value.message
+        or state.lsp_progress[progress_id].message
+      state.lsp_progress[progress_id].percentage = progress_value.percentage
+        or state.lsp_progress[progress_id].percentage
     end
   elseif progress_value.kind == 'end' then
     if state.lsp_progress[progress_id] then
@@ -148,7 +174,18 @@ vim.lsp.handlers['$/progress'] = function(err, result, ctx)
   update_window()
 end
 
-require("mini.notify").setup({ lsp_progress = { enable = false } })
+require('mini.notify').setup({
+  lsp_progress = {
+    enable = false,
+  },
+  window = {
+    config = {},
+    max_width_share = 0.382,
+    winblend = 0,
+  },
+})
+local map = function(lhs, rhs, desc) vim.keymap.set('n', lhs, rhs, { desc = desc, silent = true }) end
+map('<leader>nh', function() MiniNotify.show_history() end, 'Notify history')
 
 -- dont delete:
 -- vim: ts=2 sts=2 sw=2 et

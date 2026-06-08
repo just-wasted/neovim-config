@@ -53,9 +53,7 @@ vim.api.nvim_create_autocmd('FileType', {
     'mininotify-history',
   },
   callback = function(args)
-    if not vim.bo[args.buf].modifiable then
-      vim.keymap.set('n', 'q', ':bd<CR>', { buffer = args.buf })
-    end
+    vim.keymap.set('n', 'q', ':bd<CR>', { buffer = args.buf })
   end,
   desc = 'delete buffer with <q>',
 })
