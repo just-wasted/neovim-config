@@ -1,3 +1,4 @@
+---- Highlight when yanking (copying) text
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
   callback = function()
@@ -6,6 +7,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
 })
 
+---- don't auto-insert comment leader when using 'o' or 'O'
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('wasted/no_auto-comment', { clear = true }),
   pattern = '*',
@@ -15,9 +17,10 @@ vim.api.nvim_create_autocmd('FileType', {
   desc = 'dont auto-insert comment leader',
 })
 
+---- set height of help splits
 vim.api.nvim_create_autocmd('BufWinEnter', {
   group = vim.api.nvim_create_augroup('wasted/help_window_size', { clear = true }),
-  pattern = '*.txt', -- Help-Dateien enden auf .txt
+  pattern = '*.txt',
   callback = function()
     if vim.bo.filetype == 'help' then
       vim.api.nvim_win_set_height(0, math.floor(vim.o.lines * 0.4))
@@ -26,6 +29,7 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
   desc = 'set height of help splits',
 })
 
+---- close with <q>
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('wasted/close_with_q', { clear = true }),
   pattern = {
@@ -35,13 +39,28 @@ vim.api.nvim_create_autocmd('FileType', {
     'qf',
   },
   callback = function(args)
-    if args.match ~= 'help' or not vim.bo[args.buf].modifiable then
+    if not vim.bo[args.buf].modifiable then
       vim.keymap.set('n', 'q', '<cmd>quit<cr>', { buffer = args.buf })
     end
   end,
   desc = 'Close with <q>',
 })
 
+---- delete buffer with <q>
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('wasted/delete_buf_with_q', { clear = true }),
+  pattern = {
+    'mininotify-history',
+  },
+  callback = function(args)
+    if not vim.bo[args.buf].modifiable then
+      vim.keymap.set('n', 'q', ':bd<CR>', { buffer = args.buf })
+    end
+  end,
+  desc = 'delete buffer with <q>',
+})
+
+---- Go to the last location when opening a buffer
 vim.api.nvim_create_autocmd('BufReadPost', {
   group = vim.api.nvim_create_augroup('wasted/last_location', { clear = true }),
   callback = function(args)
@@ -54,6 +73,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   desc = 'Go to the last location when opening a buffer',
 })
 
+---- limit window height of qflist
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('wasted/qfheight', { clear = true }),
   pattern = 'qf',
@@ -63,19 +83,22 @@ vim.api.nvim_create_autocmd('FileType', {
   desc = 'limit window height of qflist',
 })
 
+---- complete only necessary characters when matching right of the cursor
+---- NOTE still struggles with snippets
 vim.api.nvim_create_autocmd('CompleteDone', {
+  group = vim.api.nvim_create_augroup('wasted/smart_complete', { clear = true }),
   callback = function()
     local item = vim.v.completed_item
     if not item then
       return
     end
 
-    local completed_text = item.word or item.abbr or item.label or ''
+    local completed_text = item.word or item.abbr or ''
     if completed_text == '' then
       return
     end
 
-    local suffix = vim.api.nvim_get_current_line():sub(vim.fn.col('.'), vim.fn.col('.') + 30)
+    local suffix = vim.api.nvim_get_current_line():sub(vim.fn.col('.'), vim.fn.col('.') + 60)
 
     local match_len = 0
     for len = math.min(#suffix, #completed_text), 1, -1 do
@@ -89,6 +112,7 @@ vim.api.nvim_create_autocmd('CompleteDone', {
       vim.cmd('normal! d' .. match_len .. 'l')
     end
   end,
+  desc = 'smart complete',
 })
 
 -- vim: ts=2 sts=2 sw=2 et

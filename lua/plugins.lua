@@ -56,24 +56,25 @@ require('which-key').setup({
 
 require('treesitter')
 require('tweak/notify')
-require('mini.indentscope').setup({ symbol = '│' })
 
-require('tweak/hipatterns')
 require('mason').setup()
 
 --- misc
 require('mini.extra').setup()
 require('mini.ai').setup({
   custom_textobjects = {
-    B = MiniExtra.gen_ai_spec.buffer(),
+    X = MiniExtra.gen_ai_spec.buffer(),
   },
 })
+
+require('mini.indentscope').setup({ symbol = '│' })
+require('tweak/hipatterns')
+require('lsp')
 require('mini.surround').setup()
 require('tweak/minipairs')
--- require('tweak/minicmp')
-require('tweak.blinkcmp')
+require('tweak/minicmp')
+-- require('tweak.blinkcmp')
 require('mini.cursorword').setup()
-require('lsp')
 require('tweak/minifiles')
 
 

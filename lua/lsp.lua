@@ -13,6 +13,10 @@ vim.lsp.config['lua_ls'] = {
         keywordSnippet = 'Replace',
       },
       runtime = { version = 'LuaJIT', path = vim.split(package.path, ';') },
+      diagnostics = {
+        -- Don't analyze whole workspace, as it consumes too much CPU and RAM
+        -- workspaceDelay = -1,
+      },
       workspace = {
         -- Don't analyze code from submodules
         ignoreSubmodules = true,
@@ -37,7 +41,7 @@ vim.lsp.config['bashls'] = {
 vim.lsp.enable({ 'lua_ls', 'bashls', 'clangd' })
 
 local on_attach = function(args)
-  -- vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
+  vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
 
   local client = vim.lsp.get_client_by_id(args.data.client_id)
   if client and client:supports_method('textDocument/documentHighlight', args.buf) then

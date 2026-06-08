@@ -1,8 +1,8 @@
 require('mini.pairs').setup({
-  mappings = {
-    ['<'] = { action = 'open', pair = '<>', neigh_pattern = '^[^\\]' },
-    ['>'] = { action = 'close', pair = '<>', neigh_pattern = '^[^\\]' },
-  },
+  -- mappings = {
+  --   ['<'] = { action = 'open', pair = '<>', neigh_pattern = '^[^\\]', register = { cr = true }},
+  --   ['>'] = { action = 'close', pair = '<>', neigh_pattern = '^[^\\]' , register = { cr = true }},
+  -- },
 })
 
 ---- https://github.com/nvim-mini/mini.nvim/discussions/2030#discussioncomment-14533323

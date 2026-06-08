@@ -14,7 +14,6 @@ end)
 -- vim.opt.shada = "'100,<50,s10,:1000,/100,@100,h" -- Limit ShaDa file (for startup)
 
 vim.g.have_nerd_font = true
-vim.g.netrw_banner = 1
 vim.g.c_syntax_for_h = 1
 vim.opt.termguicolors = true
 vim.opt.laststatus = 3
@@ -25,8 +24,12 @@ vim.opt.showmode = false
 vim.opt.winborder = 'rounded'
 vim.opt.breakindent = true
 vim.opt.undofile = true
+
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.spelloptions = 'camel'
@@ -47,12 +50,12 @@ vim.opt.foldlevel = 99
 vim.opt.completefunc = 'omnifunc'
 -- vim.o.autocomplete = true
 vim.opt.complete = '.,w,b,u,t'
-vim.opt.completeopt = 'menuone,noinsert,fuzzy'
+vim.opt.completeopt = 'menuone,noinsert,fuzzy,nosort'
 vim.opt.completetimeout = 100
 
 vim.opt.shortmess:append('c')
 vim.opt.pumheight = 7
-vim.opt.pummaxwidth = 400
+vim.opt.pummaxwidth = 70
 vim.opt.pumblend = 0
 vim.opt.isfname:append('@-@')
 
@@ -82,8 +85,8 @@ vim.keymap.set('n', '_', explore, { desc = 'Explore File System', silent = true 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>:<CR>')
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selected lines down' })
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selected lines up' })
-vim.keymap.set('v', '<', '<gv', { desc = 'Unindent and keep selection' })
-vim.keymap.set('v', '>', '>gv', { desc = 'Indent and keep selection' })
+-- vim.keymap.set('v', '<', '<gv', { desc = 'Unindent and keep selection' })
+-- vim.keymap.set('v', '>', '>gv', { desc = 'Indent and keep selection' })
 vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search result, centered' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search result, centered' })
 vim.keymap.set('n', '*', '*zzzv', { desc = 'Search word under cursor, centered' })
@@ -111,11 +114,6 @@ vim.keymap.set('n', '<leader>u', ':Undotree<CR>', { desc = 'Undotree', silent = 
 vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste over selection, preserve register' })
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
-
-vim.keymap.set('i', '<CR>', function ()
-  return vim.fn.pumvisible() == 1 and '<C-e><CR>' or '<CR>'
-end, { expr = true })
-
 vim.keymap.set('n', 'j', function()
   return vim.v.count > 0 and 'j' or 'gj'
 end, { expr = true })
@@ -129,4 +127,13 @@ vim.keymap.set('i', '<Tab>', function()
   return vim.fn.pumvisible() == 1 and '<C-Y>' or '<TAB>'
 end, { expr = true })
 
+---- sippet jumpt for builtin standalone completion
+local jump_next = function()
+  if vim.snippet.active({direction = 1}) then return vim.snippet.jump(1) end
+end
+local jump_prev = function()
+  if vim.snippet.active({direction = -1}) then vim.snippet.jump(-1) end
+end
+vim.keymap.set({ 'i', 's' }, '<C-l>', jump_next)
+vim.keymap.set({ 'i', 's' }, '<C-h>', jump_prev)
 -- vim: ts=2 sts=2 sw=2 et

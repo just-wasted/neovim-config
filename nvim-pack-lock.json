@@ -1,13 +1,5 @@
 {
   "plugins": {
-    "blink.cmp": {
-      "rev": "3db7326f54b73df4789e0fd6274bedda33975fea",
-      "src": "https://github.com/saghen/blink.cmp"
-    },
-    "blink.lib": {
-      "rev": "b127d48bf8e9ac9cf41f6e0fbead317503f76558",
-      "src": "https://github.com/saghen/blink.lib"
-    },
     "filepaths_ls.nvim": {
       "rev": "c5ebc0aa1cb0c7dc4509be834ca54f2c8364c11b",
       "src": "https://github.com/antonk52/filepaths_ls.nvim"
