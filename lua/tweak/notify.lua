@@ -11,6 +11,7 @@ local ns = vim.api.nvim_create_namespace('NotifyHighlight')
 
 local function update_window()
   local lines = {}
+  local max_line_length = 40
 
   -- Collect LSP messages
   local message_line_indices = {}
@@ -26,9 +27,9 @@ local function update_window()
       end
       if msg ~= '' then
         msg = msg:gsub('%b()', ''):gsub('^%s+', ''):gsub('%s+$', '')
-        -- Truncate to 80 chars with ...
-        if vim.fn.strdisplaywidth(msg) > 80 then
-          msg = vim.fn.strcharpart(msg, 0, 77) .. '...'
+        -- Truncate to max_line_length chars with ...
+        if vim.fn.strdisplaywidth(msg) > max_line_length then
+          msg = vim.fn.strcharpart(msg, 0, max_line_length - 3) .. '...'
         end
         table.insert(lines, msg)
         table.insert(message_line_indices, #lines - 1)
@@ -47,9 +48,9 @@ local function update_window()
       table.insert(client_names, spinner .. ' ' .. client)
     end
     local status_line = table.concat(client_names, ' | ')
-    -- Truncate to 80 chars with ...
-    if vim.fn.strdisplaywidth(status_line) > 80 then
-      status_line = vim.fn.strcharpart(status_line, 0, 77) .. '...'
+    -- Truncate to max_line_length chars with ...
+    if vim.fn.strdisplaywidth(status_line) > max_line_length then
+      status_line = vim.fn.strcharpart(status_line, 0, max_line_length - 3) .. '...'
     end
     table.insert(lines, status_line)
     table.insert(status_line_indices, #lines - 1)
