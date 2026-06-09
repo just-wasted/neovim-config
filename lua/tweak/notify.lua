@@ -115,13 +115,14 @@ local function update_window()
   end
 
   -- Create window config: reuse existing window if valid, otherwise create new one
+  local horizontal_pad = 2
   local win_config = {
     relative = 'editor',
     anchor = 'SE',
     width = max_width,
     height = height,
     row = vim.o.lines - vertical_pad - 1,
-    col = vim.o.columns - vertical_pad,
+    col = vim.o.columns - horizontal_pad,
     border = '',
     style = 'minimal',
   }
@@ -175,12 +176,19 @@ vim.lsp.handlers['$/progress'] = function(err, result, ctx)
       spinner_index = 0,
     }
   elseif progress_value.kind == 'report' then
-    if state.lsp_progress[progress_id] then
-      state.lsp_progress[progress_id].message = progress_value.message
-        or state.lsp_progress[progress_id].message
-      state.lsp_progress[progress_id].percentage = progress_value.percentage
-        or state.lsp_progress[progress_id].percentage
+    if not state.lsp_progress[progress_id] then
+      state.lsp_progress[progress_id] = {
+        client = client.name,
+        title = '',
+        message = '',
+        percentage = 0,
+        spinner_index = 0,
+      }
     end
+    state.lsp_progress[progress_id].message = progress_value.message
+      or state.lsp_progress[progress_id].message
+    state.lsp_progress[progress_id].percentage = progress_value.percentage
+      or state.lsp_progress[progress_id].percentage
   elseif progress_value.kind == 'end' then
     if state.lsp_progress[progress_id] then
       state.lsp_progress[progress_id].percentage = 100
