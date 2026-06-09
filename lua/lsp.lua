@@ -38,7 +38,7 @@ vim.lsp.config['bashls'] = {
   },
 }
 
-vim.lsp.enable({ 'lua_ls', 'bashls', 'clangd' })
+vim.lsp.enable({ 'lua_ls', 'bashls', 'clangd', 'rust_analyzer' })
 
 local on_attach = function(args)
   vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
