@@ -2,7 +2,7 @@ local state = {
   lsp_progress = {},
   win_id = nil,
   buf_id = nil,
-  spinner_chars = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧" },
+  spinner_chars = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧' },
   spinner_timer = nil,
 }
 
@@ -17,7 +17,7 @@ local function update_window()
   local message_line_indices = {}
   local status_line_indices = {}
   local active_clients = {}
-  
+
   for _, progress in pairs(state.lsp_progress) do
     if progress then
       -- Message (if exists)
@@ -34,7 +34,7 @@ local function update_window()
         table.insert(lines, msg)
         table.insert(message_line_indices, #lines - 1)
       end
-      
+
       -- Track active clients for single status line
       active_clients[progress.client] = progress
     end
@@ -44,7 +44,8 @@ local function update_window()
   if next(active_clients) then
     local client_names = {}
     for client, progress in pairs(active_clients) do
-      local spinner = state.spinner_chars[(progress.spinner_index or 0) % #state.spinner_chars + 1]
+      local spinner =
+        state.spinner_chars[(progress.spinner_index or 0) % #state.spinner_chars + 1]
       table.insert(client_names, spinner .. ' ' .. client)
     end
     local status_line = table.concat(client_names, ' | ')
@@ -65,16 +66,15 @@ local function update_window()
   end
 
   -- Calculate maximum width for right-justification
-  -- All lines are already truncated to 80 chars
   local max_width = 0
   for _, line in ipairs(lines) do
     max_width = math.max(max_width, vim.fn.strdisplaywidth(line))
   end
   max_width = math.min(max_width, vim.o.columns - 10)
 
-  -- Right-justify all lines (max 80 chars each)
+  -- Right-justify all lines
   for i, line in ipairs(lines) do
-    lines[i] = string.rep(" ", max_width - vim.fn.strdisplaywidth(line)) .. line
+    lines[i] = string.rep(' ', max_width - vim.fn.strdisplaywidth(line)) .. line
   end
 
   local has_statusline = vim.o.laststatus > 0
@@ -138,16 +138,19 @@ local function update_window()
   -- Start spinner animation timer (only once)
   if not state.spinner_timer then
     state.spinner_timer = vim.loop.new_timer()
-    state.spinner_timer:start(100, 100, vim.schedule_wrap(function()
-      for _, progress in pairs(state.lsp_progress) do
-        if progress then
-          progress.spinner_index = (progress.spinner_index + 1) % #state.spinner_chars
+    state.spinner_timer:start(
+      100,
+      100,
+      vim.schedule_wrap(function()
+        for _, progress in pairs(state.lsp_progress) do
+          if progress then
+            progress.spinner_index = (progress.spinner_index + 1) % #state.spinner_chars
+          end
         end
-      end
-      update_window()
-    end))
+        update_window()
+      end)
+    )
   end
-
 end
 
 -- Handle LSP progress notifications ($/progress)
@@ -201,7 +204,11 @@ require('mini.notify').setup({
     winblend = 0,
   },
 })
-local map = function(lhs, rhs, desc) vim.keymap.set('n', lhs, rhs, { desc = desc, silent = true }) end
-map('<leader>nh', function() MiniNotify.show_history() end, 'Notify history')
+local map = function(lhs, rhs, desc)
+  vim.keymap.set('n', lhs, rhs, { desc = desc, silent = true })
+end
+map('<leader>nh', function()
+  MiniNotify.show_history()
+end, 'Notify history')
 
 -- vim: ts=2 sts=2 sw=2 et
