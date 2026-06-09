@@ -24,6 +24,10 @@ local function update_window()
       end
       if msg ~= '' then
         msg = msg:gsub('%b()', ''):gsub('^%s+', ''):gsub('%s+$', '')
+        -- Truncate to 80 chars with ...
+        if vim.fn.strdisplaywidth(msg) > 80 then
+          msg = vim.fn.strcharpart(msg, 0, 77) .. '...'
+        end
         table.insert(lines, msg)
         table.insert(message_line_indices, #lines - 1)
       end
@@ -35,7 +39,12 @@ local function update_window()
       local status_parts = { spinner }
       if percent_str ~= '' then table.insert(status_parts, percent_str) end
       table.insert(status_parts, progress.client)
-      table.insert(lines, table.concat(status_parts, ' '))
+      local status_line = table.concat(status_parts, ' ')
+      -- Truncate to 80 chars with ...
+      if vim.fn.strdisplaywidth(status_line) > 80 then
+        status_line = vim.fn.strcharpart(status_line, 0, 77) .. '...'
+      end
+      table.insert(lines, status_line)
       table.insert(status_line_indices, #lines - 1)
     end
   end
@@ -49,15 +58,16 @@ local function update_window()
   end
 
   -- Calculate maximum width for right-justification
+  -- All lines are already truncated to 80 chars
   local max_width = 0
   for _, line in ipairs(lines) do
     max_width = math.max(max_width, vim.fn.strdisplaywidth(line))
   end
   max_width = math.min(max_width, vim.o.columns - 10)
 
-  -- Right-justify all lines
+  -- Right-justify all lines (max 80 chars each)
   for i, line in ipairs(lines) do
-    lines[i] = string.format('%' .. max_width .. 's', line)
+    lines[i] = string.rep(" ", max_width - vim.fn.strdisplaywidth(line)) .. line
   end
 
   local has_statusline = vim.o.laststatus > 0
