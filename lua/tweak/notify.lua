@@ -4,6 +4,7 @@ local state = {
   buf_id = nil,
   spinner_chars = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧' },
   spinner_timer = nil,
+  progress_end_delay = 2000, -- ms: how long to show progress after completion
 }
 
 -- Persistent namespace for highlights
@@ -36,7 +37,9 @@ local function update_window()
       end
 
       -- Track active clients for single status line
-      active_clients[progress.client] = progress
+      if progress.client then
+        active_clients[progress.client] = progress
+      end
     end
   end
 
@@ -44,9 +47,11 @@ local function update_window()
   if next(active_clients) then
     local client_names = {}
     for client, progress in pairs(active_clients) do
-      local spinner =
-        state.spinner_chars[(progress.spinner_index or 0) % #state.spinner_chars + 1]
-      table.insert(client_names, spinner .. ' ' .. client)
+      if client then
+        local spinner =
+          state.spinner_chars[(progress.spinner_index or 0) % #state.spinner_chars + 1]
+        table.insert(client_names, spinner .. ' ' .. client)
+      end
     end
     local status_line = table.concat(client_names, ' | ')
     -- Truncate to max_line_length chars with ...
@@ -67,14 +72,17 @@ local function update_window()
 
   -- Calculate maximum width for right-justification
   local max_width = 0
-  for _, line in ipairs(lines) do
-    max_width = math.max(max_width, vim.fn.strdisplaywidth(line))
+  local line_widths = {}
+  for i, line in ipairs(lines) do
+    local w = vim.fn.strdisplaywidth(line)
+    line_widths[i] = w
+    max_width = math.max(max_width, w)
   end
   max_width = math.min(max_width, vim.o.columns - 10)
 
   -- Right-justify all lines
   for i, line in ipairs(lines) do
-    lines[i] = string.rep(' ', max_width - vim.fn.strdisplaywidth(line)) .. line
+    lines[i] = string.rep(' ', max_width - line_widths[i]) .. line
   end
 
   local has_statusline = vim.o.laststatus > 0
@@ -196,7 +204,7 @@ vim.lsp.handlers['$/progress'] = function(err, result, ctx)
     vim.defer_fn(function()
       state.lsp_progress[progress_id] = nil
       update_window()
-    end, 1000)
+    end, state.progress_end_delay)
   end
 
   update_window()
