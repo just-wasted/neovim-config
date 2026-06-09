@@ -12,9 +12,11 @@ local ns = vim.api.nvim_create_namespace('NotifyHighlight')
 local function update_window()
   local lines = {}
 
-  -- Collect LSP messages and status lines
+  -- Collect LSP messages
   local message_line_indices = {}
   local status_line_indices = {}
+  local active_clients = {}
+  
   for _, progress in pairs(state.lsp_progress) do
     if progress then
       -- Message (if exists)
@@ -31,22 +33,26 @@ local function update_window()
         table.insert(lines, msg)
         table.insert(message_line_indices, #lines - 1)
       end
-
-      -- Status line: SPINNER Client percentage
-      local percent_str = ''
-      -- local percent_str = progress.percentage and string.format('%d%%', progress.percentage) or ''
-      local spinner = state.spinner_chars[(progress.spinner_index or 0) % #state.spinner_chars + 1]
-      local status_parts = { spinner }
-      if percent_str ~= '' then table.insert(status_parts, percent_str) end
-      table.insert(status_parts, progress.client)
-      local status_line = table.concat(status_parts, ' ')
-      -- Truncate to 80 chars with ...
-      if vim.fn.strdisplaywidth(status_line) > 80 then
-        status_line = vim.fn.strcharpart(status_line, 0, 77) .. '...'
-      end
-      table.insert(lines, status_line)
-      table.insert(status_line_indices, #lines - 1)
+      
+      -- Track active clients for single status line
+      active_clients[progress.client] = progress
     end
+  end
+
+  -- Single status line combining all active clients
+  if next(active_clients) then
+    local client_names = {}
+    for client, progress in pairs(active_clients) do
+      local spinner = state.spinner_chars[(progress.spinner_index or 0) % #state.spinner_chars + 1]
+      table.insert(client_names, spinner .. ' ' .. client)
+    end
+    local status_line = table.concat(client_names, ' | ')
+    -- Truncate to 80 chars with ...
+    if vim.fn.strdisplaywidth(status_line) > 80 then
+      status_line = vim.fn.strcharpart(status_line, 0, 77) .. '...'
+    end
+    table.insert(lines, status_line)
+    table.insert(status_line_indices, #lines - 1)
   end
 
   if #lines == 0 then
