@@ -77,11 +77,12 @@ require('mini.completion').setup({
     auto_setup = false,
     process_items = function(items, base)
       local Function = vim.lsp.protocol.CompletionItemKind.Function
+      local Method = vim.lsp.protocol.CompletionItemKind.Method
       for _, item in ipairs(items) do
-        if item.kind == Function then
+        if item.kind == Function or item.kind == Method then
           local text = item.insertText or item.label or ''
 
-          if not text:match('%(.-%)$') then
+          if not text:match('%(.-%).-$') then
             item.insertTextFormat = 2
             item.insertText = text .. '($0)'
           end
@@ -89,7 +90,7 @@ require('mini.completion').setup({
           if
             item.textEdit
             and item.textEdit.newText
-            and not item.textEdit.newText:match('%(.-%)$')
+            and not item.textEdit.newText:match('%(.-%).-$')
           then
             item.textEdit.newText = item.textEdit.newText .. '($0)'
           end

@@ -21,6 +21,14 @@ MiniFiles.setup({
   },
 })
 
+local set_cwd = function()
+  local path = (MiniFiles.get_fs_entry() or {}).path
+  if path == nil then return vim.notify('Cursor is not on valid entry') end
+  vim.fn.chdir(vim.fs.dirname(path))
+  local cwd = vim.fn.getcwd()
+  vim.notify("Changed cwd to: " .. cwd)
+end
+
 local toggle_dotfiles = function()
   show_dotfiles = not show_dotfiles
   local new_filter = show_dotfiles and filter_show or filter_hide
@@ -31,7 +39,8 @@ vim.api.nvim_create_autocmd('User', {
   pattern = 'MiniFilesBufferCreate',
   callback = function(args)
     local buf_id = args.data.buf_id
-    vim.keymap.set('n', 'g.', toggle_dotfiles, { buffer = buf_id })
+    vim.keymap.set('n', 'g.', toggle_dotfiles, { buffer = buf_id, desc = 'Toggle hide/show hidden' })
+    vim.keymap.set('n', 'gC', set_cwd, { buffer = buf_id, desc = 'Set as working dir' })
   end,
 })
 

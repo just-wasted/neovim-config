@@ -45,7 +45,6 @@ vim.opt.cursorline = true
 vim.opt.iskeyword = '@,48-57,_,192-255,-' -- Treat dash as `word` textobject part
 vim.opt.scrolloff = 5
 vim.opt.confirm = true
-vim.opt.foldlevel = 99
 
 vim.opt.completefunc = 'omnifunc'
 -- vim.o.autocomplete = true
@@ -58,6 +57,21 @@ vim.opt.pumheight = 7
 vim.opt.pummaxwidth = 70
 vim.opt.pumblend = 0
 vim.opt.isfname:append('@-@')
+
+vim.opt.foldcolumn = '0'
+vim.opt.foldlevel = 99
+
+-- UI characters.
+vim.opt.fillchars = {
+    eob = ' ',
+    fold = ' ',
+    foldclose = '',
+    foldopen = ' ' ,
+    foldsep = ' ',
+    foldinner = ' ',
+    msgsep = '─',
+}
+
 
 -----------------
 ---- Keymaps ----
