@@ -133,8 +133,7 @@ require("mini.jump2d").setup({
   },
 })
 vim.keymap.set(
-  { "o", "x", "n" },
-  "<Cr>",
+  { "o", "x", "n" }, "<Cr>",
   "<Cmd>lua MiniJump2d.start(MiniJump2d.builtin_opts.single_character)<CR>",
   { desc = "Jump" }
 )
