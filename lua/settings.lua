@@ -141,7 +141,7 @@ vim.keymap.set('i', '<Tab>', function()
   return vim.fn.pumvisible() == 1 and '<C-Y>' or '<TAB>'
 end, { expr = true })
 
----- sippet jumpt for builtin standalone completion
+---- snippet jump for builtin snippet engine
 local jump_next = function()
   if vim.snippet.active({direction = 1}) then return vim.snippet.jump(1) end
 end

@@ -17,6 +17,15 @@ vim.api.nvim_create_autocmd('FileType', {
   desc = 'dont auto-insert comment leader',
 })
 
+--- open mini.map on startup
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = vim.api.nvim_create_augroup('wasted/show_map', { clear = true }),
+	callback = function()
+		require("mini.map").open()
+	end,
+  desc = 'show map on startup',
+})
+
 ---- set height of help splits
 vim.api.nvim_create_autocmd('BufWinEnter', {
   group = vim.api.nvim_create_augroup('wasted/help_window_size', { clear = true }),
@@ -81,36 +90,36 @@ vim.api.nvim_create_autocmd('FileType', {
   desc = 'limit window height of qflist',
 })
 
----- complete only necessary characters when matching right of the cursor
+---- insert only necessary characters when completing right of the cursor
 ---- NOTE still struggles with snippets
-vim.api.nvim_create_autocmd('CompleteDone', {
-  group = vim.api.nvim_create_augroup('wasted/smart_complete', { clear = true }),
-  callback = function()
-    local item = vim.v.completed_item
-    if not item then
-      return
-    end
-
-    local completed_text = item.word or item.abbr or ''
-    if completed_text == '' then
-      return
-    end
-
-    local suffix = vim.api.nvim_get_current_line():sub(vim.fn.col('.'), vim.fn.col('.') + 60)
-
-    local match_len = 0
-    for len = math.min(#suffix, #completed_text), 1, -1 do
-      if completed_text:sub(-len) == suffix:sub(1, len) then
-        match_len = len
-        break
-      end
-    end
-
-    if match_len > 0 then
-      vim.cmd('normal! d' .. match_len .. 'l')
-    end
-  end,
-  desc = 'smart complete',
-})
+-- vim.api.nvim_create_autocmd('CompleteDone', {
+--   group = vim.api.nvim_create_augroup('wasted/smart_complete', { clear = true }),
+--   callback = function()
+--     local item = vim.v.completed_item
+--     if not item then
+--       return
+--     end
+--
+--     local completed_text = item.word or item.abbr or ''
+--     if completed_text == '' then
+--       return
+--     end
+--
+--     local suffix = vim.api.nvim_get_current_line():sub(vim.fn.col('.'), vim.fn.col('.') + 60)
+--
+--     local match_len = 0
+--     for len = math.min(#suffix, #completed_text), 1, -1 do
+--       if completed_text:sub(-len) == suffix:sub(1, len) then
+--         match_len = len
+--         break
+--       end
+--     end
+--
+--     if match_len > 0 then
+--       vim.cmd('normal! d' .. match_len .. 'l')
+--     end
+--   end,
+--   desc = 'smart complete',
+-- })
 
 -- vim: ts=2 sts=2 sw=2 et

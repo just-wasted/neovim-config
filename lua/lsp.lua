@@ -1,4 +1,3 @@
-
 vim.lsp.config['lua_ls'] = {
   on_attach = function(client)
     client.server_capabilities.completionProvider.triggerCharacters =
@@ -38,17 +37,25 @@ vim.lsp.config['bashls'] = {
   },
 }
 
+vim.lsp.config["clangd"]= {
+  cmd = {
+    "clangd",
+    "--compile-commands-dir=build",
+    "--query-driver=/**/*gcc,/**/*g++",
+    "--background-index",
+    "--clang-tidy",
+  },
+}
+
 vim.lsp.enable({ 'lua_ls', 'bashls', 'clangd', 'rust_analyzer' })
 
 
-
 local on_attach = function(args)
-  vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
+  -- vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
 
   local client = vim.lsp.get_client_by_id(args.data.client_id)
 
   if client and client:supports_method('textDocument/documentHighlight', args.buf) then
-
     vim.b.minicursorword_disable = true
     local highlight_augroup =
       vim.api.nvim_create_augroup('cursor-lsp-highlight', { clear = false })
@@ -74,76 +81,86 @@ local on_attach = function(args)
     })
   end
 
-    ---- keymaps when LSP is attached ----
+  ---- keymaps when LSP is attached ----
   local map = function(keys, func, desc, mode)
     mode = mode or 'n'
     vim.keymap.set(mode, keys, func, { buffer = args.buf, desc = desc })
   end
 
-  if client and client:supports_method('textDocument/declaration', args.buf) then
-    map( "gD", vim.lsp.buf.declaration, "Declaration" )
+  if client and client:supports_method('textDocument/references', args.buf) then
+    map('grr', function()
+      MiniExtra.pickers.lsp({ scope = 'references' })
+    end, 'References')
   end
 
   if client and client:supports_method('textDocument/definition', args.buf) then
-    map( "gd", vim.lsp.buf.definition, "Defijition")
+    map('gd', MiniPick.registry.lsp_definitions, 'Definition')
   end
 
-  --- make a small range for clangd so it will suggest code actions
-  local ca_fake_range = function()
-    if client and client.name ~= 'clangd' then
-      vim.lsp.buf.code_action()
-    else
-      local cursor = vim.api.nvim_win_get_cursor(0)
-      vim.lsp.buf.code_action({
-        range = {
-          start = { cursor[1], cursor[2] },
-          ["end"] = { cursor[1], cursor[2] + 1 }
-        }
-      })
-    end
-  end
-
-  if client and client:supports_method('textDocument/codeAction', args.buf) then
-    map( "gra", ca_fake_range, 'Code Actions' )
-  end
-
-  if client and client:supports_method('textDocument/codeAction', args.buf) then
-    map( "gra", vim.lsp.buf.code_action, 'Code Actions',  "v" )
-  end
-
-
-  if client and client:supports_method('textDocument/rename', args.buf) then
-    map( "grn", vim.lsp.buf.rename, "Rename" )
+  if client and client:supports_method('textDocument/declaration', args.buf) then
+    map('grD', MiniPick.registry.lsp_declarations, 'Declaration')
   end
 
   if client and client:supports_method('textDocument/implementation', args.buf) then
-    map( "gri", vim.lsp.buf.implementation, "Implementation")
+    map('gri', function()
+      MiniExtra.pickers.lsp({ scope = 'implementation' })
+    end, 'Implementation')
+  end
+
+  if client and client:supports_method('textDocument/typeDefinition', args.buf) then
+    map('grt', function()
+      MiniExtra.pickers.lsp({ scope = 'type_definition' })
+    end, 'Type Definition')
+  end
+
+  if client and client:supports_method('typeHierarchy/subtypes', args.buf) then
+    map('grT', function()
+      MiniPick.registry.lsp_call_type_hyrarchy(args, 'subtypes')
+    end, 'Subtypes')
+  end
+
+  if client and client:supports_method('typeHierarchy/supertypes', args.buf) then
+    map('grp', function()
+      MiniPick.registry.lsp_call_type_hyrarchy(args, 'supertypes')
+    end, 'Supertypes')
   end
 
   if client and client:supports_method('callHierarchy/incomingCalls', args.buf) then
-    map( "grc", vim.lsp.buf.incoming_calls, "Symbol incoming calls")
+    map('grc', function()
+      MiniPick.registry.lsp_call_type_hyrarchy(args, 'incomingCalls')
+    end, 'Symbol incoming calls')
   end
 
-  if client and client:supports_method('callHierarchy/incomingCalls', args.buf) then
-    map( "grC", vim.lsp.buf.outgoing_calls, "Symbol outgoing calls")
+  if client and client:supports_method('callHierarchy/outgoingCalls', args.buf) then
+    map('grC', function()
+      MiniPick.registry.lsp_call_type_hyrarchy(args, 'outgoingCalls')
+    end, 'Symbol outgoing calls')
   end
 
-  if client and client:supports_method('textDocument/references', args.buf) then
-    map( "grr", vim.lsp.buf.references, "References")
+  if client and client:supports_method('textDocument/codeAction', args.buf) then
+    map('gra', vim.lsp.buf.code_action, 'Code Actions', 'v')
   end
 
-  local toggle_codelens = function ()
-   vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled())
+  if client and client:supports_method('textDocument/rename', args.buf) then
+    map('grn', vim.lsp.buf.rename, 'Rename')
   end
 
-  if client and client:supports_method('codeLens/resolve', args.buf) then
-    vim.lsp.codelens.enable()
-    map( "grx", vim.lsp.codelens.run, "run CodeLens")
-    map( "grX", toggle_codelens, "Toggle CodeLens")
+  if client and client:supports_method('textDocument/codeLens', args.buf) then
+    -- vim.lsp.codelens.enable()
+    map('grx', vim.lsp.codelens.run, 'run CodeLens')
+    map('grX', function()
+      vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled())
+    end, 'Toggle CodeLens')
   end
+
+  if client and client:supports_method('textDocument/inlayHint', args.buf) then
+    map('<leader>th', function()
+      vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }))
+    end, 'Toggle inlay hints')
+  end
+
 end
 vim.api.nvim_create_autocmd('LspAttach', { callback = on_attach })
-
 
 ---- stuff for nvim native autocomplete
 -- vim.api.nvim_create_autocmd('LspAttach', {

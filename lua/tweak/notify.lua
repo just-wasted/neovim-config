@@ -129,8 +129,8 @@ local function update_window()
     anchor = 'SE',
     width = max_width,
     height = height,
-    row = vim.o.lines - vertical_pad - 1,
-    col = vim.o.columns - horizontal_pad,
+    row = vim.o.lines - vertical_pad,
+    col = vim.o.columns - horizontal_pad - 1,
     border = '',
     style = 'minimal',
   }
