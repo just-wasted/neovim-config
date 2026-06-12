@@ -105,7 +105,6 @@ vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search result, centered' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search result, centered' })
 vim.keymap.set('n', '*', '*zzzv', { desc = 'Search word under cursor, centered' })
 
-vim.keymap.set('n', 'gh', ': LspClangdSwitchSourceHeader<CR>', { desc = 'Goto [H]eader/ Source' })
 vim.keymap.set('n', 'gb', ':b#<CR>', { desc = '[G]o to last buffer', silent = true })
 vim.keymap.set('v', 'gj', ':join<CR>', { desc = 'Join selected lines' })
 

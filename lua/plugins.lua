@@ -74,9 +74,7 @@ require('which-key').setup({
   },
   spec = {
     { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-    { '<leader>d', group = '[D]ocument' },
     { '<leader>r', group = '[L]sp' },
-    { '<leader>s', group = '[S]urround' },
     { '<leader>w', group = '[W]orkspace' },
     { '<leader>t', group = 'Toggle' },
     { '<leader>g', group = '[G]it Pickers', mode = { 'n', 'v' } },
@@ -92,7 +90,7 @@ require('mason').setup()
 --- misc
 require('mini.diff').setup({
   view = {
-    style = 'number' and 'sign',
+    style = 'sign',
     signs = { add = '+', change = '~', delete = '-' },
     priority = 0,
   },
@@ -106,6 +104,7 @@ require('mini.diff').setup({
       goto_last = '<leader>hl',
     },
   })
+vim.keymap.set('n', '<leader>ho', MiniDiff.toggle_overlay, { desc = 'Toggle diff [O]verlay' })
 vim.api.nvim_set_hl(0, "MiniDiffSignDelete", { fg = "#B26A75", bg = "NONE" })
 
 require('mini.extra').setup()
@@ -126,7 +125,7 @@ require('mini.cursorword').setup()
 require('tweak/minifiles')
 
 require("mini.jump2d").setup({
-  labels = "asdfjklghiowevnbcmpqrtuxyz",
+  labels = "asdfjklghiowevntbcmpqruxyz",
   view = {
     dim = true,
     n_steps_ahead = 1,
