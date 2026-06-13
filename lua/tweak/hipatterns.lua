@@ -2,6 +2,7 @@ vim.api.nvim_set_hl(0, 'MiniHipatternsFixme', { fg = '#C52B53', bold = true, ita
 vim.api.nvim_set_hl(0, 'MiniHipatternsHack', { fg = '#FFC777', bold = true, italic = true })
 vim.api.nvim_set_hl(0, 'MiniHipatternsTodo', { fg = '#0DB9D7', bold = true, italic = true })
 vim.api.nvim_set_hl(0, 'MiniHipatternsNote', { fg = '#4FD6BE', bold = true, italic = true })
+vim.api.nvim_set_hl(0, 'MiniHipatternsDebug', { fg = '#FFC777', bold = false, italic = true })
 
 local hi_todo = function(words, hl_name)
   local patterns = vim
@@ -36,9 +37,10 @@ local hipatterns = require('mini.hipatterns')
 hipatterns.setup({
   highlighters = {
     fixme = hi_todo({ 'FIXME', 'FIX', 'BUG', 'ERROR' }, 'MiniHipatternsFixme'),
-    hack = hi_todo({ 'HACK', 'WARN', 'WARNING', 'debug'  }, 'MiniHipatternsHack'),
+    hack = hi_todo({ 'HACK', 'WARN', 'WARNING' }, 'MiniHipatternsHack'),
     todo = hi_todo({ 'TODO' }, 'MiniHipatternsTodo'),
     note = hi_todo({ 'NOTE', 'INFO', 'HINT'}, 'MiniHipatternsNote'),
+    debug = hi_todo({ 'debug' }, 'MiniHipatternsDebug'),
     hex_color = hipatterns.gen_highlighter.hex_color(),
   },
   delay = {

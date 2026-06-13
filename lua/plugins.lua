@@ -21,6 +21,8 @@ require('colors/tokyonight')
 require('mini.icons').setup({
   lsp = {
     snippet = { glyph = '󰁌', hl = 'MiniIconsGreen' },
+    method = { hl = 'MiniIconsOrange' },
+    constructor = { hl = 'MiniIconsBlue' }
   },
 })
 MiniIcons.mock_nvim_web_devicons()

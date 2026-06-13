@@ -37,7 +37,8 @@ vim.lsp.config("clangd", {
   cmd = {
     "clangd",
     "--compile-commands-dir=build",
-    "--query-driver=/**/*gcc,/**/*g++",
+    -- "--query-driver=/**/*gcc,/**/*g++",
+    "--query-driver=/usr/bin/g++,/usr/bin/gcc",
     "--background-index",
     "--clang-tidy",
   },
