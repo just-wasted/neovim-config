@@ -1,6 +1,5 @@
-
--- own kind struct for compatibity with MiniIcons.tweak_lsp_kind()
-local SymbolKind = {
+-- own kind array incase MiniIcons.tweak_lsp_kind() is used
+local symbolKind = {
   'File',
   'Module',
   'Namespace',
@@ -119,24 +118,38 @@ MiniPick.registry.lsp_call_type_hierarchy = function(args, lspOperation)
     error('Parameter lspOperation is not of type string, found: ' .. type(lspOperation))
   end
 
-  local ui_name = ({
-    incomingCalls = 'Incoming Calls',
-    outgoingCalls = 'Outgoing Calls',
-    supertypes = 'Supertypes (Parent)',
-    subtypes = 'Subtypes (Child)',
+  local strs = ({
+    incomingCalls = {
+      'Incoming Calls to ',
+      'textDocument/prepareCallHierarchy',
+      'callHierarchy/' .. lspOperation,
+      'call'
+    },
+    outgoingCalls = {
+      'Outgoing Calls from ',
+      'textDocument/prepareCallHierarchy',
+      'callHierarchy/' .. lspOperation,
+      'call'
+    },
+    supertypes = {
+      'Supertypes (Parent)',
+      'textDocument/prepareTypeHierarchy',
+      'typeHierarchy/' .. lspOperation,
+      'type'
+    },
+    subtypes = {
+      'Subtypes (Child)',
+      'textDocument/prepareTypeHierarchy',
+      'typeHierarchy/' .. lspOperation,
+      'type'
+    },
   })[lspOperation] or error('Parameter lspOperation has unknown value: ' .. lspOperation)
 
-  local lsp_op = ''
-  local prepare_statement = ''
-  local retrieve_statement = ''
-  if lspOperation == 'incomingCalls' or lspOperation == 'outgoingCalls' then
-    prepare_statement = 'textDocument/prepareCallHierarchy'
-    retrieve_statement = 'callHierarchy/' .. lspOperation
-    lsp_op = 'call'
-  else
-    prepare_statement = 'textDocument/prepareTypeHierarchy'
-    retrieve_statement = 'typeHierarchy/' .. lspOperation
-    lsp_op = 'type'
+  local ui_name, prepare_statement, retrieve_statement, lsp_op = strs[1], strs[2], strs[3], strs[4]
+
+  if lsp_op == 'call' then
+    local src_func = vim.trim(vim.api.nvim_get_current_line()):gsub('%(.*', '()')
+    ui_name = ui_name .. src_func
   end
 
   local offs_encoding = client.offset_encoding
@@ -172,7 +185,7 @@ MiniPick.registry.lsp_call_type_hierarchy = function(args, lspOperation)
           for _, lsp_itm in ipairs(lsp_items) do
             local call_item = lsp_itm.from or lsp_itm.to
             for _, range in ipairs(lsp_itm.fromRanges) do
-              local kind = SymbolKind[call_item.kind]
+              local kind = symbolKind[call_item.kind]
               local kind_icon, kind_hl = MiniIcons.get('lsp', kind)
               local kind_full = kind_icon .. ' ' .. kind
               local name = string.format('%-20s %s', call_item.name, kind_full)
@@ -196,6 +209,7 @@ MiniPick.registry.lsp_call_type_hierarchy = function(args, lspOperation)
                 kind_hl = kind_hl,
                 kind_len = kind_full:len(),
                 name_len = name:len(),
+                rel_path_len = rel_path:len(),
               })
             end
           end
@@ -206,15 +220,17 @@ MiniPick.registry.lsp_call_type_hierarchy = function(args, lspOperation)
             vim.notify(lsp_op)
 
             local uri = vim.uri_to_fname(lsp_itm.uri)
-            local kind = vim.lsp.protocol.SymbolKind[lsp_itm.kind]
+            local kind = symbolKind[lsp_itm.kind]
+            local kind_icon, kind_hl = MiniIcons.get('lsp', kind)
+            local kind_full = kind_icon .. ' ' .. kind
             local icon, kind_hl = MiniIcons.get('lsp', kind)
-            local name = string.format('%s %s %s', lsp_itm.name, icon, kind)
+            local name = string.format('%-20s %s', lsp_itm.name, kind_full)
             local line = lsp_itm.range.start.line + 1
             local col = lsp_itm.range.start.character + 1
             local rel_path = vim.fn.fnamemodify(uri, ':.')
 
             table.insert(items, {
-              text = string.format('%s\t%s %d:%d', name, rel_path, line, col),
+              text = string.format('%-35s %s %d:%d', name, rel_path, line, col),
               path = uri,
               lnum = line,
               col = col,
@@ -234,19 +250,31 @@ MiniPick.registry.lsp_call_type_hierarchy = function(args, lspOperation)
               MiniPick.default_show(buf_id, items, query, {
                 show_icons = true,
               })
-              local namespace = vim.api.nvim_create_namespace('CustomPickerKind')
-              for line_num = 0, #items - 1 do
-                local start_col = 4 -- i don't know why but we need 4 here
-                local end_col = start_col + items[line_num + 1].name_len + 1
-
-                vim.api.nvim_buf_set_extmark(buf_id, namespace, line_num, start_col, {
-                  end_row = line_num,
-                  end_col = end_col,
-                  hl_group = items[line_num + 1].kind_hl,
-                  hl_mode = 'combine',
-                  priority = 200
-                })
-              end
+              -- local offs = 4 -- i don't know why but we need 4 here
+              -- local namespace = vim.api.nvim_create_namespace('CustomPickerKind')
+              -- for line_num = 0, #items - 1 do
+              --   local item = items[line_num + 1]
+              --   local kind_start_col = offs + (item.name_len - item.kind_len)
+              --   local kind_end_col = kind_start_col + item.kind_len + 1
+              --
+              --   vim.api.nvim_buf_set_extmark(buf_id, namespace, line_num, kind_start_col, {
+              --     end_row = line_num,
+              --     end_col = kind_end_col,
+              --     hl_group = items[line_num + 1].kind_hl,
+              --     hl_mode = 'combine',
+              --     priority = 200,
+              --   })
+              --
+              --   local path_start_col = offs + 3 + item.name_len
+              --   local path_end_col = path_start_col + item.rel_path_len + 1
+              --   vim.api.nvim_buf_set_extmark(buf_id, namespace, line_num, path_start_col, {
+              --     end_row = line_num,
+              --     end_col = path_end_col,
+              --     hl_group = 'comment',
+              --     hl_mode = 'combine',
+              --     priority = 200,
+              --   })
+              -- end
             end,
             match = MiniPick.default_match,
           },

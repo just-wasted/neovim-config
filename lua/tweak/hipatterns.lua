@@ -36,9 +36,9 @@ local hipatterns = require('mini.hipatterns')
 hipatterns.setup({
   highlighters = {
     fixme = hi_todo({ 'FIXME', 'FIX', 'BUG', 'ERROR' }, 'MiniHipatternsFixme'),
-    hack = hi_todo({ 'HACK', 'WARN', 'WARNING' }, 'MiniHipatternsHack'),
+    hack = hi_todo({ 'HACK', 'WARN', 'WARNING', 'debug'  }, 'MiniHipatternsHack'),
     todo = hi_todo({ 'TODO' }, 'MiniHipatternsTodo'),
-    note = hi_todo({ 'NOTE', 'INFO', 'HINT', 'debug' }, 'MiniHipatternsNote'),
+    note = hi_todo({ 'NOTE', 'INFO', 'HINT'}, 'MiniHipatternsNote'),
     hex_color = hipatterns.gen_highlighter.hex_color(),
   },
   delay = {

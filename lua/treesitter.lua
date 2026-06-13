@@ -28,7 +28,7 @@ local function ts_context()
 
   require('treesitter-context').setup({
     enable = false,
-    max_lines = 4,
+    max_lines = 2,
     multiline_threshold = 2,
     mode = 'topline',
   })
