@@ -1,5 +1,6 @@
 vim.cmd('packadd nvim.undotree')
 vim.cmd('packadd nvim.difftool')
+
 vim.pack.add({
   --
   { src = 'https://github.com/folke/tokyonight.nvim' },
@@ -12,6 +13,7 @@ vim.pack.add({
 
   { src = 'https://github.com/folke/which-key.nvim' },
   { src = 'https://github.com/rafamadriz/friendly-snippets' },
+  { src = 'https://github.com/ibhagwan/fzf-lua' },
   --
 })
 
@@ -22,6 +24,7 @@ require('mini.icons').setup({
   },
 })
 MiniIcons.mock_nvim_web_devicons()
+-- MiniIcons.tweak_lsp_kind('replace')
 
 ---- status line ----
 require('mini.statusline').setup({
@@ -37,8 +40,8 @@ map.setup({
   integrations = {
     map.gen_integration.builtin_search(),
     map.gen_integration.diagnostic({
-     error = 'DiagnosticFloatingError',
-     warn  = 'DiagnosticFloatingWarn',
+      error = 'DiagnosticFloatingError',
+      warn = 'DiagnosticFloatingWarn',
     }),
     map.gen_integration.diff(),
   },
@@ -59,11 +62,9 @@ vim.keymap.set('n', '<leader>mc', map.close, { desc = '[M]ap [C]lose' })
 vim.keymap.set('n', '<leader>mf', map.toggle_focus, { desc = '[M]ap [F]ocus' })
 vim.keymap.set('n', '<leader>mm', map.toggle, { desc = '[M]ap Toggle' })
 vim.keymap.set('n', '<leader>mr', map.refresh, { desc = '[M]ap [R]efresh' })
-vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = "#7B83A1", bg = "NONE" })
-vim.api.nvim_set_hl(0, "MiniMapSymbolView", { fg = "#7B83A1", bg = "NONE" })
-vim.api.nvim_set_hl(0, "MiniMapSymbolLine", { fg = "#7B83A1", bg = "NONE" })
--- vim.api.nvim_set_hl(0, "MiniMapNormal", { fg = "#2f334d", bg = "NONE" })
--- vim.api.nvim_set_hl(0, "MiniMapSymbolView", { fg = "#2f334d", bg = "NONE" })
+vim.api.nvim_set_hl(0, 'MiniMapNormal', { fg = '#7B83A1', bg = 'NONE' })
+vim.api.nvim_set_hl(0, 'MiniMapSymbolView', { fg = '#7B83A1', bg = 'NONE' })
+vim.api.nvim_set_hl(0, 'MiniMapSymbolLine', { fg = '#7B83A1', bg = 'NONE' })
 
 -- which-key ----
 require('which-key').setup({
@@ -95,17 +96,17 @@ require('mini.diff').setup({
     priority = 0,
   },
   mappings = {
-      apply = '<leader>ha',
-      reset = '<leader>hr',
-      textobject = 'gh',
-      goto_first = '<leader>hf',
-      goto_prev = '<leader>hp',
-      goto_next = '<leader>hn',
-      goto_last = '<leader>hl',
-    },
-  })
+    apply = '<leader>ha',
+    reset = '<leader>hr',
+    textobject = 'gh',
+    goto_first = '<leader>hf',
+    goto_prev = '<leader>hp',
+    goto_next = '<leader>hn',
+    goto_last = '<leader>hl',
+  },
+})
 vim.keymap.set('n', '<leader>ho', MiniDiff.toggle_overlay, { desc = 'Toggle diff [O]verlay' })
-vim.api.nvim_set_hl(0, "MiniDiffSignDelete", { fg = "#B26A75", bg = "NONE" })
+vim.api.nvim_set_hl(0, 'MiniDiffSignDelete', { fg = '#B26A75', bg = 'NONE' })
 
 require('mini.extra').setup()
 require('mini.ai').setup({
@@ -113,7 +114,9 @@ require('mini.ai').setup({
     X = MiniExtra.gen_ai_spec.buffer(),
   },
 })
-require('mini.indentscope').setup({ symbol = '│' })
+require('mini.indentscope').setup({
+  symbol = '▏',
+})
 require('tweak/hipatterns')
 require('lsp')
 require('mini.surround').setup()
@@ -124,17 +127,18 @@ require('tweak.blinkcmp')
 require('mini.cursorword').setup()
 require('tweak/minifiles')
 
-require("mini.jump2d").setup({
-  labels = "asdfjklghiowevntbcmpqruxyz",
+require('mini.jump2d').setup({
+  labels = 'asdfjklghiowevntbcmpqruxyz',
   view = {
     dim = true,
     n_steps_ahead = 1,
   },
 })
 vim.keymap.set(
-  { "o", "x", "n" }, "<Cr>",
-  "<Cmd>lua MiniJump2d.start(MiniJump2d.builtin_opts.single_character)<CR>",
-  { desc = "Jump" }
+  { 'o', 'x', 'n' },
+  '<Cr>',
+  '<Cmd>lua MiniJump2d.start(MiniJump2d.builtin_opts.single_character)<CR>',
+  { desc = 'Jump' }
 )
 
 ---- user commands

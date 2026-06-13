@@ -1,5 +1,8 @@
 vim.pack.add({ 'https://github.com/saghen/blink.lib', 'https://github.com/saghen/blink.cmp' })
 
+
+require('mini.cmdline').setup()
+
 local cmp = require('blink.cmp')
 
 cmp.build():pwait()
@@ -31,15 +34,6 @@ cmp.setup({
       -- range = 'prefix',
     },
   },
-  cmdline = {
-    keymap = { preset = 'none' },
-    completion = {
-      menu = {
-        auto_show = true,
-        border = 'none',
-      },
-    },
-  },
   sources = {
     default = {
       'lsp',
@@ -51,6 +45,7 @@ cmp.setup({
   fuzzy = {
     implementation = 'prefer_rust_with_warning',
   },
+  cmdline = { enabled = false },
 })
 
 vim.lsp.config('*', {

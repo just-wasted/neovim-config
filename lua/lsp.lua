@@ -118,25 +118,25 @@ local on_attach = function(args)
 
   if client and client:supports_method('typeHierarchy/subtypes', args.buf) then
     map('grT', function()
-      MiniPick.registry.lsp_call_type_hyrarchy(args, 'subtypes')
+      MiniPick.registry.lsp_call_type_hierarchy(args, 'subtypes')
     end, 'Subtypes')
   end
 
   if client and client:supports_method('typeHierarchy/supertypes', args.buf) then
     map('grp', function()
-      MiniPick.registry.lsp_call_type_hyrarchy(args, 'supertypes')
+      MiniPick.registry.lsp_call_type_hierarchy(args, 'supertypes')
     end, 'Supertypes')
   end
 
   if client and client:supports_method('callHierarchy/incomingCalls', args.buf) then
     map('grc', function()
-      MiniPick.registry.lsp_call_type_hyrarchy(args, 'incomingCalls')
+      MiniPick.registry.lsp_call_type_hierarchy(args, 'incomingCalls')
     end, 'Symbol incoming calls')
   end
 
   if client and client:supports_method('callHierarchy/outgoingCalls', args.buf) then
     map('grC', function()
-      MiniPick.registry.lsp_call_type_hyrarchy(args, 'outgoingCalls')
+      MiniPick.registry.lsp_call_type_hierarchy(args, 'outgoingCalls')
     end, 'Symbol outgoing calls')
   end
 

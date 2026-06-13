@@ -38,7 +38,7 @@ hipatterns.setup({
     fixme = hi_todo({ 'FIXME', 'FIX', 'BUG', 'ERROR' }, 'MiniHipatternsFixme'),
     hack = hi_todo({ 'HACK', 'WARN', 'WARNING' }, 'MiniHipatternsHack'),
     todo = hi_todo({ 'TODO' }, 'MiniHipatternsTodo'),
-    note = hi_todo({ 'NOTE', 'INFO', 'HINT' }, 'MiniHipatternsNote'),
+    note = hi_todo({ 'NOTE', 'INFO', 'HINT', 'debug' }, 'MiniHipatternsNote'),
     hex_color = hipatterns.gen_highlighter.hex_color(),
   },
   delay = {

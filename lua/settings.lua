@@ -92,15 +92,13 @@ vim.keymap.set('n', '-', function()
   end
 end)
 
-local explore = '<Cmd>lua MiniFiles.open()<CR>'
-vim.keymap.set('n', '_', explore, { desc = 'Explore File System', silent = true })
+local explore_cwd = '<Cmd>lua MiniFiles.open()<CR>'
+vim.keymap.set('n', '_', explore_cwd, { desc = 'Explore CWD', silent = true })
 
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>:<CR>')
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selected lines down' })
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selected lines up' })
--- vim.keymap.set('v', '<', '<gv', { desc = 'Unindent and keep selection' })
--- vim.keymap.set('v', '>', '>gv', { desc = 'Indent and keep selection' })
 vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Next search result, centered' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Previous search result, centered' })
 vim.keymap.set('n', '*', '*zzzv', { desc = 'Search word under cursor, centered' })
@@ -121,7 +119,6 @@ vim.keymap.set('n', '<leader>qq', vim.diagnostic.setqflist, { desc = 'Open diagn
 vim.keymap.set('n', '<leader>qc', ':cclose<CR>', { desc = '[C]lose Quickfix list' })
 vim.keymap.set('n', '<leader>O', 'O<Esc>', { desc = 'Empty line above' })
 vim.keymap.set('n', '<leader>o', 'o<Esc>', { desc = 'Empty line below' })
-vim.keymap.set('n', '<leader>st', ':TodoQuickFix<CR>', { desc = '[T]odo-comments in [Q]ickfix List' })
 vim.keymap.set('n', '<leader>T', ':tabnew<CR>', { desc = 'New [T]ab' })
 vim.keymap.set('n', '<leader>u', ':Undotree<CR>', { desc = 'Undotree', silent = true })
 vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste over selection, preserve register' })
@@ -135,7 +132,7 @@ vim.keymap.set('n', 'k', function()
   return vim.v.count > 0 and 'k' or 'gk'
 end, { expr = true })
 
--- super tab for auto completion
+-- super tab for builtins auto completion
 vim.keymap.set('i', '<Tab>', function()
   return vim.fn.pumvisible() == 1 and '<C-Y>' or '<TAB>'
 end, { expr = true })
