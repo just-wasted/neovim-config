@@ -56,7 +56,7 @@ local make_call_hierarchy_items = function (lsp_items, items, args)
         path = target_path,
         lnum = line,
         col = col,
-        kind_hl = kind_hl,
+        kind_hl = kind_hl or 'MiniPickMatchRanges',
         kind_len = kind_full:len(),
         name_len = name:len(),
         rel_path_len = rel_path:len(),
@@ -81,7 +81,7 @@ local make_type_hierarchy_items = function (lsp_items, items)
       path = target_path,
       lnum = line,
       col = col,
-      kind_hl = kind_hl,
+      kind_hl = kind_hl or 'MiniPickMatchRanges',
       kind_len = kind_full:len(),
       name_len = name:len(),
       rel_path_len = rel_path:len(),
@@ -136,6 +136,7 @@ MiniPick.registry.lsp_call_type_hierarchy = function(args, lspOperation)
       'Parameter lspOperation is not of type string, found: ' .. type(lspOperation),
       error_lev
     )
+    return
   end
 
   -- lookup table for strings used for LSP requests, picker_name and logic
@@ -193,7 +194,7 @@ MiniPick.registry.lsp_call_type_hierarchy = function(args, lspOperation)
       { item = hierarchy_item[1] },
       function(err2, lsp_items)
         if err2 then
-          vim.notif('error: ' .. err2.message .. '\nerr code: ' .. err2.code, error_lev)
+          vim.notify('error: ' .. err2.message .. '\nerr code: ' .. err2.code, error_lev)
           return
         end
 
