@@ -90,6 +90,14 @@ vim.api.nvim_create_autocmd('FileType', {
   desc = 'limit window height of qflist',
 })
 
+---- command line completion
+vim.api.nvim_create_autocmd('CmdlineChanged', {
+  pattern = '[:\\/\\?]',
+  callback = function()
+    vim.fn.wildtrigger()
+  end
+})
+
 ---- insert only necessary characters when completing right of the cursor
 ---- NOTE still struggles with snippets
 -- vim.api.nvim_create_autocmd('CompleteDone', {

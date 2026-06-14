@@ -52,6 +52,9 @@ vim.opt.complete = '.,w,b,u,t'
 vim.opt.completeopt = 'menuone,noinsert,fuzzy,nosort'
 vim.opt.completetimeout = 100
 
+vim.opt.wildmode='noselect:lastused,full'
+vim.opt.wildoptions='pum'
+
 vim.opt.shortmess:append('c')
 vim.opt.pumheight = 7
 vim.opt.pummaxwidth = 70

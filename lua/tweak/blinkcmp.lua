@@ -1,7 +1,7 @@
 vim.pack.add({ 'https://github.com/saghen/blink.lib', 'https://github.com/saghen/blink.cmp' })
 
 
-require('mini.cmdline').setup()
+-- require('mini.cmdline').setup()
 
 local cmp = require('blink.cmp')
 

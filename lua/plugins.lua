@@ -128,6 +128,16 @@ require('tweak.blinkcmp')
 require('mini.cursorword').setup()
 require('tweak/minifiles')
 
+require('mini.cmdline').setup({
+  autocomplete = {
+    enable = false,
+    map_arrows = true,
+  },
+  autocorrect = {
+    enable = false,
+  },
+})
+
 require('mini.jump2d').setup({
   labels = 'asdfjklghiowevntbcmpqruxyz',
   view = {
