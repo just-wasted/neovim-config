@@ -76,11 +76,11 @@ require('which-key').setup({
   },
   spec = {
     { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
-    { '<leader>r', group = '[L]sp' },
+    { 'gr', group = 'Lsp' },
     { '<leader>w', group = '[W]orkspace' },
     { '<leader>t', group = 'Toggle' },
     { '<leader>g', group = '[G]it Pickers', mode = { 'n', 'v' } },
-    { '<leader>h', group = 'Git [H]unks' },
+    { '<leader>h', group = 'Git Hunks' },
     { '<leader>m', group = '[M]ap' },
     { '<leader>q', group = '[Q]uickfix' },
   },

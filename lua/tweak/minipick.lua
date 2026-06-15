@@ -40,10 +40,12 @@ local autopick_first = function(results)
     local rel_path = vim.fn.fnamemodify(i.filename, ':.')
     local show_text = i.text:gsub('^%s*(.-)%s*$', '%1')
     return {
-      text = string.format('%s│%3d│%3d│ %s', rel_path, i.lnum, i.col, show_text),
+      text = string.format('%s %s %3d:%3d', show_text, rel_path, i.lnum, i.col),
       path = vim.fn.fnamemodify(i.filename, ':p'),
       lnum = i.lnum,
       col = i.col,
+      text_len = show_text:len(),
+      rel_path_len = rel_path:len()
     }
   end
   if #items == 1 then

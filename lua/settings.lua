@@ -52,8 +52,8 @@ vim.opt.complete = '.,w,b,u,t'
 vim.opt.completeopt = 'menuone,noinsert,fuzzy,nosort'
 vim.opt.completetimeout = 100
 
+vim.opt.wildoptions='pum,fuzzy'
 vim.opt.wildmode='noselect:lastused,full'
-vim.opt.wildoptions='pum'
 
 vim.opt.shortmess:append('c')
 vim.opt.pumheight = 7
@@ -116,7 +116,8 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 
-vim.keymap.set('n', '<leader>b', ':ls<CR>:b<Space>', { desc = 'List [B]uffers and choose' })
+-- vim.keymap.set('n', '<leader>b', ':ls<CR>:b<Space>', { desc = 'List [B]uffers and choose' })
+vim.keymap.set('n', '<leader>b', ':b<Space>', { desc = 'List [B]uffers and choose' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show [E]rror Message' })
 vim.keymap.set('n', '<leader>qq', vim.diagnostic.setqflist, { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('n', '<leader>qc', ':cclose<CR>', { desc = '[C]lose Quickfix list' })
@@ -126,6 +127,31 @@ vim.keymap.set('n', '<leader>T', ':tabnew<CR>', { desc = 'New [T]ab' })
 vim.keymap.set('n', '<leader>u', ':Undotree<CR>', { desc = 'Undotree', silent = true })
 vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste over selection, preserve register' })
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+
+local function toggle_bool()
+  local cword = vim.fn.expand('<cword>')
+  if cword == 'true' then
+    return '<cmd>normal! ciwfalse<CR>'
+  elseif cword == 'false' then
+    return '<cmd>normal! ciwtrue<CR>'
+  end
+  local cursor_col = vim.fn.col('.')
+  local line = string.sub(vim.fn.getline('.'), cursor_col)
+  local bool_pos = vim.fn.match(line, [[\<true\>\|\<false\>]])
+  vim.schedule(function ()
+    if bool_pos ~= -1 then
+      vim.api.nvim_win_set_cursor(0, { vim.fn.line('.'), bool_pos + cursor_col -1 })
+      cword = vim.fn.expand('<cword>')
+      if cword == 'true' then
+        vim.cmd('normal! ciwfalse')
+      elseif cword == 'false' then
+        vim.cmd('normal! ciwtrue')
+      end
+    end
+  end)
+end
+vim.keymap.set('n', '<leader>a', toggle_bool, { expr = true, desc = 'Alternate Booleans'})
 
 vim.keymap.set('n', 'j', function()
   return vim.v.count > 0 and 'j' or 'gj'

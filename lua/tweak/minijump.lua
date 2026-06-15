@@ -25,3 +25,5 @@ vim.keymap.set("n", "S", function ()
   MiniJump.jump(char_first .. char_second, true, false, 1)
 end)
 vim.api.nvim_set_hl(0, "MiniJump", { fg = "#ffffff", bg = "#28827c" })
+
+-- vim: ts=2 sts=2 sw=2 et

@@ -48,8 +48,4 @@ cmp.setup({
   cmdline = { enabled = false },
 })
 
-vim.lsp.config('*', {
-  capabilities = require('blink.cmp').get_lsp_capabilities(nil, true),
-})
-
 -- vim: ts=2 sts=2 sw=2 et
