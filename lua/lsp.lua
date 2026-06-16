@@ -102,7 +102,25 @@ local on_attach = function(args)
   end
 
   if client and client:supports_method('textDocument/declaration', args.buf) then
-    map('grD', MiniPick.registry.lsp_declarations, 'Declaration')
+    map('gD', MiniPick.registry.lsp_declarations, 'Declaration')
+  end
+
+  if client and client:supports_method('textDocument/documentSymbol', args.buf) then
+    map('grd', function ()
+      MiniExtra.pickers.lsp({scope = 'document_symbol'})
+    end , 'Document Symbols')
+  end
+
+  if client and client:supports_method('workspace/symbol', args.buf) then
+    map('grw', function ()
+      MiniExtra.pickers.lsp({scope = 'workspace_symbol'})
+    end, 'Workspace Symbols')
+  end
+
+  if client and client:supports_method('workspace/symbol', args.buf) then
+    map('grW', function ()
+      MiniExtra.pickers.lsp({scope = 'workspace_symbol_live'})
+    end, 'Workspace Symbols Live')
   end
 
   if client and client:supports_method('textDocument/implementation', args.buf) then
@@ -180,6 +198,7 @@ local on_attach = function(args)
     map('gra', vim.lsp.buf.code_action, 'Code Actions', 'v')
   end
 end
+
 vim.api.nvim_create_autocmd('LspAttach', { callback = on_attach })
 
 ---- stuff for nvim native autocomplete

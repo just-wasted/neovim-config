@@ -13,7 +13,6 @@ vim.pack.add({
 
   { src = 'https://github.com/folke/which-key.nvim' },
   { src = 'https://github.com/rafamadriz/friendly-snippets' },
-  { src = 'https://github.com/ibhagwan/fzf-lua' },
   --
 })
 
@@ -26,6 +25,7 @@ require('mini.icons').setup({
   },
 })
 MiniIcons.mock_nvim_web_devicons()
+MiniIcons.tweak_lsp_kind()
 
 ---- status line ----
 require('mini.statusline').setup({
@@ -101,8 +101,8 @@ require('mini.diff').setup({
     reset = '<leader>hr',
     textobject = 'gh',
     goto_first = '<leader>hf',
-    goto_prev = '<leader>hp',
-    goto_next = '<leader>hn',
+    goto_prev = 'gH',
+    goto_next = 'gh',
     goto_last = '<leader>hl',
   },
 })
