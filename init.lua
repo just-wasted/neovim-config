@@ -28,9 +28,11 @@ vim.api.nvim_create_autocmd('PackChanged', {
   end,
 })
 
+
 require('settings')
-require('diagnostics')
-require('plugins')
 require('autocmd')
+require('plugins')
+require('diagnostics')
+
 
 -- vim: ts=2 sts=2 sw=2 et

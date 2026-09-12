@@ -1,7 +1,13 @@
 require("tokyonight").setup({
   on_colors = function(colors)
     colors.green = "#A3C86D"
-  end
+  end,
+  on_highlights = function(highlights, colors)
+      highlights.DiagnosticVirtualTextError = { link = "Comment" }
+      highlights.DiagnosticVirtualTextWarn = { link = "Comment" }
+      highlights.DiagnosticVirtualTextInfo = { link = "Comment" }
+      highlights.DiagnosticVirtualTextHint = { link = "Comment" }
+    end,
 })
 
 vim.cmd.colorscheme("tokyonight-moon")

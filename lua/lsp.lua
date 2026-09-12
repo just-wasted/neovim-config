@@ -1,4 +1,4 @@
-vim.lsp.config('lua_ls',  {
+vim.lsp.config('lua_ls', {
   on_attach = function(client)
     client.server_capabilities.completionProvider.triggerCharacters =
       { '.', ':', '#', '(', '[', '{' }
@@ -33,26 +33,45 @@ vim.lsp.config('bashls', {
   },
 })
 
-vim.lsp.config("clangd", {
+vim.lsp.config('clangd', {
   cmd = {
-    "clangd",
-    "--compile-commands-dir=build",
+    'clangd',
+    '--compile-commands-dir=build',
     -- "--query-driver=/**/*gcc,/**/*g++",
-    "--query-driver=/usr/bin/g++,/usr/bin/gcc",
-    "--background-index",
-    "--clang-tidy",
+    '--query-driver=/usr/bin/g++,/usr/bin/gcc',
+    '--background-index',
+    '--clang-tidy',
   },
 })
 
-vim.lsp.enable({ 'lua_ls', 'bashls', 'clangd', 'rust_analyzer' })
+vim.lsp.config('pylsp', {
+  settings = {
+    pylsp = {
+      plugins = {
+        pycodestyle = {
+          enabled = false, -- Deaktiviert pycodestyle komplett
+        },
+      },
+    },
+  },
+})
 
+vim.lsp.enable({
+  'bashls',
+  'clangd',
+  'cssls',
+  'html',
+  'intelephense',
+  'lua_ls',
+  'pylsp',
+  'rust_analyzer',
+})
 
 local on_attach = function(args)
   ---- for MiniCompletion
   -- vim.bo[args.buf].omnifunc = 'v:lua.MiniCompletion.completefunc_lsp'
 
   local client = vim.lsp.get_client_by_id(args.data.client_id)
-
 
   if client and client:supports_method('textDocument/documentHighlight', args.buf) then
     vim.b.minicursorword_disable = true
@@ -106,20 +125,20 @@ local on_attach = function(args)
   end
 
   if client and client:supports_method('textDocument/documentSymbol', args.buf) then
-    map('grd', function ()
-      MiniExtra.pickers.lsp({scope = 'document_symbol'})
-    end , 'Document Symbols')
+    map('grd', function()
+      MiniExtra.pickers.lsp({ scope = 'document_symbol' })
+    end, 'Document Symbols')
   end
 
   if client and client:supports_method('workspace/symbol', args.buf) then
-    map('grw', function ()
-      MiniExtra.pickers.lsp({scope = 'workspace_symbol'})
+    map('grw', function()
+      MiniExtra.pickers.lsp({ scope = 'workspace_symbol' })
     end, 'Workspace Symbols')
   end
 
   if client and client:supports_method('workspace/symbol', args.buf) then
-    map('grW', function ()
-      MiniExtra.pickers.lsp({scope = 'workspace_symbol_live'})
+    map('grW', function()
+      MiniExtra.pickers.lsp({ scope = 'workspace_symbol_live' })
     end, 'Workspace Symbols Live')
   end
 

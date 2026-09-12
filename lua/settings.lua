@@ -30,6 +30,10 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
+vim.opt.smoothscroll = true
+vim.opt.scrolloff = 5
+vim.opt.virtualedit = 'block'
+
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.spelloptions = 'camel'
@@ -43,7 +47,6 @@ vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 vim.opt.iskeyword = '@,48-57,_,192-255,-' -- Treat dash as `word` textobject part
-vim.opt.scrolloff = 5
 vim.opt.confirm = true
 
 vim.opt.completefunc = 'omnifunc'
@@ -52,8 +55,8 @@ vim.opt.complete = '.,w,b,u,t'
 vim.opt.completeopt = 'menuone,noinsert,fuzzy,nosort'
 vim.opt.completetimeout = 100
 
-vim.opt.wildoptions='pum,fuzzy'
-vim.opt.wildmode='noselect:lastused,full'
+-- vim.opt.wildoptions='pum,fuzzy'
+-- vim.opt.wildmode='noselect:lastused,full'
 
 vim.opt.shortmess:append('c')
 vim.opt.pumheight = 7
@@ -162,9 +165,9 @@ vim.keymap.set('n', 'k', function()
 end, { expr = true })
 
 -- super tab for builtins auto completion
-vim.keymap.set('i', '<Tab>', function()
-  return vim.fn.pumvisible() == 1 and '<C-Y>' or '<TAB>'
-end, { expr = true })
+-- vim.keymap.set('i', '<Tab>', function()
+--   return vim.fn.pumvisible() == 1 and '<C-Y>' or '<TAB>'
+-- end, { expr = false })
 
 ---- snippet jump for builtin snippet engine
 local jump_next = function()
@@ -175,4 +178,5 @@ local jump_prev = function()
 end
 vim.keymap.set({ 'i', 's' }, '<C-l>', jump_next)
 vim.keymap.set({ 'i', 's' }, '<C-h>', jump_prev)
+
 -- vim: ts=2 sts=2 sw=2 et

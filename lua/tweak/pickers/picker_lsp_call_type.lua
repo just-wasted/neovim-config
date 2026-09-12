@@ -124,6 +124,11 @@ local error_lev = vim.log.levels.ERROR
 ---@param args table
 ---@param lspOperation string
 MiniPick.registry.lsp_call_type_hierarchy = function(args, lspOperation)
+  if not args then
+    vim.notify('Parameter args is nil, aborting', error_lev)
+    return
+  end
+
   local client = vim.lsp.get_client_by_id(args.data.client_id)
 
   if not client then

@@ -13,6 +13,7 @@ vim.pack.add({
 
   { src = 'https://github.com/folke/which-key.nvim' },
   { src = 'https://github.com/rafamadriz/friendly-snippets' },
+  { src = 'https://github.com/ibhagwan/fzf-lua' }
   --
 })
 
@@ -75,21 +76,21 @@ require('which-key').setup({
     mappings = vim.g.have_nerd_font,
   },
   spec = {
-    { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
     { 'gr', group = 'Lsp' },
-    { '<leader>w', group = '[W]orkspace' },
+    { '<leader>w', group = 'Workspace' },
     { '<leader>t', group = 'Toggle' },
-    { '<leader>g', group = '[G]it Pickers', mode = { 'n', 'v' } },
+    { '<leader>g', group = 'Git', mode = { 'n', 'v' } },
     { '<leader>h', group = 'Git Hunks' },
-    { '<leader>m', group = '[M]ap' },
-    { '<leader>q', group = '[Q]uickfix' },
+    { '<leader>m', group = 'Map' },
+    { '<leader>q', group = 'Quickfix' },
   },
 })
 require('treesitter')
 require('tweak/notify')
 
 require('mason').setup()
---- misc
+
+require('mini.git').setup()
 require('mini.diff').setup({
   view = {
     style = 'sign',
@@ -106,9 +107,8 @@ require('mini.diff').setup({
     goto_last = '<leader>hl',
   },
 })
-vim.keymap.set('n', '<leader>ho', MiniDiff.toggle_overlay, { desc = 'Toggle diff [O]verlay' })
+vim.keymap.set('n', '<leader>ho', MiniDiff.toggle_overlay, { desc = 'Toggle diff Overlay' })
 vim.api.nvim_set_hl(0, 'MiniDiffSignDelete', { fg = '#B26A75', bg = 'NONE' })
-
 require('mini.extra').setup()
 require('mini.ai').setup({
   custom_textobjects = {
@@ -118,6 +118,7 @@ require('mini.ai').setup({
 require('mini.indentscope').setup({
   symbol = '▏',
 })
+
 require('tweak/hipatterns')
 require('lsp')
 require('mini.surround').setup()
@@ -130,7 +131,7 @@ require('tweak/minifiles')
 
 require('mini.cmdline').setup({
   autocomplete = {
-    enable = false,
+    enable = true,
     map_arrows = true,
   },
   autocorrect = {
@@ -139,7 +140,7 @@ require('mini.cmdline').setup({
 })
 
 require('mini.jump2d').setup({
-  labels = 'asdfjklghiowevntbcmpqruxyz',
+  labels = 'asdfjklghieowvnbtcmpqruxyz',
   view = {
     dim = true,
     n_steps_ahead = 1,
@@ -153,10 +154,6 @@ vim.keymap.set(
 )
 
 ---- user commands
-vim.api.nvim_create_user_command('PackCheckUpdates', function()
-  vim.pack.update(nil, { offline = true })
-end, {})
-
 vim.api.nvim_create_user_command('PackUpdate', function()
   vim.pack.update()
 end, {})
