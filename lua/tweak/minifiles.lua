@@ -16,8 +16,8 @@ MiniFiles.setup({
     synchronize = '<CR>',
   },
   windows = {
-    width_focus = 25,
-    width_nofocus = 15,
+    width_focus = 30,
+    width_nofocus = 20,
   },
 })
 
