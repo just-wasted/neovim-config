@@ -63,7 +63,8 @@ vim.lsp.enable({
   'html',
   'intelephense',
   'lua_ls',
-  'pylsp',
+  -- 'pylsp',
+  'basedpyright',
   'rust_analyzer',
 })
 

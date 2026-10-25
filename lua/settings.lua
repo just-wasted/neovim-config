@@ -179,4 +179,10 @@ end
 vim.keymap.set({ 'i', 's' }, '<C-l>', jump_next)
 vim.keymap.set({ 'i', 's' }, '<C-h>', jump_prev)
 
+vim.filetype.add({
+  extension = {
+    hex = "xxd",
+  },
+})
+
 -- vim: ts=2 sts=2 sw=2 et
